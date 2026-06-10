@@ -345,7 +345,11 @@ picture {
 --------------------------- */
 @media (width >= 900px) {
   .hero { padding: 40px 32px; }
-  .hero-wrapper a.button { padding: 14px 28px; font-size: 18px; }
+
+  .hero-wrapper a.button {
+    padding: 14px 28px;
+    font-size: 18px;
+  }
 }
 
 @media (width < 1024px) {

@@ -36,6 +36,8 @@ export default async function createSlider(block) {
   // Call function after page load
   const moveRightBtns = document.querySelectorAll(`.${nextBtn}`);
   const moveLeftBtns = document.querySelectorAll(`.${prevBtn}`);
+  const moveRightBtn = block.querySelector(`.${nextBtn}`);
+  const moveLeftBtn = block.querySelector(`.${prevBtn}`);
   const itemList = [...document.querySelectorAll('.carousel > ul > li')];
   const observerOptions = {
     rootMargin: '0px',

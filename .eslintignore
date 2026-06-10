@@ -1,5 +1,7 @@
 helix-importer-ui
 *.min.js
 plugins/
+scripts/aem.js
 scripts/sidekick.js
+scripts/at-lsig.js
 ue/scripts/ue.js

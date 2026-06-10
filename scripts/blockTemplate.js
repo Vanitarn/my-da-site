@@ -38,7 +38,7 @@ export const patternDecorate = async (block) => {
   const patternDom = buildOutPattern(block.children.length, pattern);
   const blockAttr = block.attributes;
   const attrObj = {};
-  Object.values(blockAttr).forEach((item) => attrObj[item.name] = item.value);
+  Object.values(blockAttr).forEach((item) => { attrObj[item.name] = item.value; });
   attrObj.class += ` ${patternDom.getAttribute('class')}`;
 
   /** ammend block element */

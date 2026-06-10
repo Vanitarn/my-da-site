@@ -33,6 +33,7 @@ export async function getSiteName() {
     }
     return '';
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.warn('Error fetching placeholders for siteName:', error);
     return '';
   }
@@ -47,6 +48,7 @@ export async function getHostname() {
     }
     return '';
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.warn('Error fetching placeholders for hostname:', error);
     return '';
   }

@@ -72,10 +72,10 @@ html[dir="rtl"] .carousel-container .button-container button {
   display: inline;
 }
 
-.carousel-container .button-container a.button:any-link, button {
+.carousel-container .button-container a.button:any-link {
   margin: 0;
 }
-  
+
 .section > div.carousel-wrapper {
   flex: 2;
   overflow: hidden;
@@ -250,7 +250,7 @@ html[dir="rtl"] .section > div.carousel-wrapper {
     padding-bottom: 40px;
   }
 
-  .carousel-container .button-container a.button:any-link, button {
+  .carousel-container .button-container a.button:any-link {
     font-size: 14px;
     font-weight: 400;
     line-height: 23px;

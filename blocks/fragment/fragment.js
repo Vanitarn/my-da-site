@@ -38,7 +38,6 @@ export async function loadFragment(path) {
       await loadSections(main);
       return main;
     }
-    console.log('resp', resp);
   }
   return null;
 }
@@ -46,8 +45,6 @@ export async function loadFragment(path) {
 export default async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
-  console.log('path', path);
   const fragment = await loadFragment(path);
-  console.log('fragment', fragment);
   if (fragment) block.replaceChildren(...fragment.childNodes);
 }

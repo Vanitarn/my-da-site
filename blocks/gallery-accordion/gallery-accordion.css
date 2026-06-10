@@ -1,0 +1,288 @@
+/* =============================================
+   GALLERY ACCORDION — ACCORDION STYLES
+   ============================================= */
+
+.gallery-accordion {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* ── Item wrapper ── */
+.ga-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.ga-item:last-child {
+  border-bottom: none;
+}
+
+/* ── Header button ── */
+.ga-item-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: #f8f9fa;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.ga-item-header:hover {
+  background: #eef0f2;
+}
+
+.ga-item-header[aria-expanded='true'] {
+  background: #fff;
+  border-bottom: 2px solid #0066cc;
+}
+
+/* ── Title text ── */
+.ga-item-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.ga-item-header[aria-expanded='true'] .ga-item-title {
+  color: #0066cc;
+}
+
+/* ── Chevron ── */
+.ga-item-chevron {
+  font-size: 1.5rem;
+  color: #999;
+  line-height: 1;
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.ga-item-header[aria-expanded='true'] .ga-item-chevron {
+  transform: rotate(180deg);
+  color: #0066cc;
+}
+
+/* ── Panel (collapsible) ── */
+.ga-item-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease, padding 0.3s ease;
+  background: #fff;
+  padding: 0 20px;
+}
+
+.ga-item-panel.open {
+  max-height: 900px;
+  padding: 20px;
+}
+
+/* =============================================
+   GALLERY ACCORDION — CAROUSEL STYLES
+   ============================================= */
+
+.gallery-accordion-carousel {
+  position: relative;
+  width: 100%;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ── Slides list ── */
+.ga-carousel-slides {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  min-height: 380px;
+}
+
+/* ── Individual slide ── */
+.gallery-accordion-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.gallery-accordion-slide.active {
+  opacity: 1;
+  position: relative;
+  pointer-events: auto;
+}
+
+/* ── Slide image ── */
+.ga-slide-image {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ga-slide-image picture {
+  display: block;
+  width: 100%;
+}
+
+.ga-slide-image img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Slide content overlay ── */
+.ga-slide-content {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));
+  color: #fff;
+}
+
+.ga-slide-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #fff;
+}
+
+.ga-slide-content p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── CTA button ── */
+.ga-slide-cta {
+  display: inline-block;
+  padding: 8px 20px;
+  background: #0066cc;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.ga-slide-cta:hover {
+  background: #0052a3;
+}
+
+/* ── Prev / Next ── */
+.ga-carousel-prev,
+.ga-carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.ga-carousel-prev:hover,
+.ga-carousel-next:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.ga-carousel-prev { left: 12px; }
+.ga-carousel-next { right: 12px; }
+
+/* ── Dots ── */
+.ga-carousel-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 10;
+}
+
+.ga-carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.ga-carousel-dot.active {
+  background: #fff;
+  transform: scale(1.35);
+}
+
+/* ── Slide counter ── */
+.ga-carousel-counter {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+
+@media (width <= 768px) {
+  .ga-item-header {
+    padding: 14px 16px;
+  }
+
+  .ga-item-title {
+    font-size: 0.9rem;
+  }
+
+  .ga-item-panel.open {
+    padding: 14px;
+  }
+
+  .ga-carousel-slides {
+    min-height: 220px;
+  }
+
+  .ga-slide-image img {
+    height: 220px;
+  }
+
+  .ga-slide-content {
+    padding: 14px 16px;
+    bottom: 44px;
+  }
+
+  .ga-slide-content h2 {
+    font-size: 1rem;
+  }
+
+  .ga-slide-content p {
+    font-size: 0.8rem;
+  }
+
+  .ga-carousel-prev,
+  .ga-carousel-next {
+    padding: 6px 10px;
+    font-size: 1.2rem;
+  }
+}

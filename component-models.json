@@ -334,6 +334,43 @@
     "id": "gallery-accordion-carousel",
     "fields": [
       {
+        "component": "reference",
+        "name": "image",
+        "label": "Slide Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Slide Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Slide Description",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "ctaText",
+        "label": "CTA Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "ctaHref",
+        "label": "CTA Link",
+        "valueType": "string"
+      },
+      {
         "component": "select",
         "name": "autoplay",
         "label": "Autoplay",
@@ -349,71 +386,6 @@
             "value": "false"
           }
         ]
-      },
-      {
-        "component": "text",
-        "name": "interval",
-        "label": "Autoplay Interval (ms)",
-        "valueType": "number",
-        "value": "5000"
-      }
-    ]
-  },
-  {
-    "id": "gallery-accordion-slide",
-    "fields": [
-      {
-        "component": "text",
-        "name": "label",
-        "label": "Slide Label (optional)",
-        "valueType": "string"
-      }
-    ]
-  },
-  {
-    "id": "gallery-accordion-slide-image",
-    "fields": [
-      {
-        "component": "reference",
-        "name": "image",
-        "label": "Image",
-        "valueType": "string",
-        "multi": false
-      },
-      {
-        "component": "text",
-        "name": "imageAlt",
-        "label": "Alt Text",
-        "valueType": "string"
-      }
-    ]
-  },
-  {
-    "id": "gallery-accordion-slide-content",
-    "fields": [
-      {
-        "component": "text",
-        "name": "title",
-        "label": "Title",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "description",
-        "label": "Description",
-        "valueType": "string"
-      },
-      {
-        "component": "text",
-        "name": "ctaText",
-        "label": "CTA Text",
-        "valueType": "string"
-      },
-      {
-        "component": "text",
-        "name": "ctaHref",
-        "label": "CTA Link",
-        "valueType": "string"
       }
     ]
   },

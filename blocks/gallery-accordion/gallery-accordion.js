@@ -1,13 +1,15 @@
-function buildSlide(slideBlock, index) {
+function buildSlide(carouselRow, index) {
   const slide = document.createElement('li');
-  slide.classList.add('gallery-accordion-slide');
+  slide.classList.add('ga-slide');
   slide.dataset.index = index;
   if (index === 0) slide.classList.add('active');
 
-  // nested slide image
-  const imgBlock = slideBlock.querySelector('.gallery-accordion-slide-image');
-  if (imgBlock) {
-    const picture = imgBlock.querySelector('picture');
+  const cols = carouselRow.querySelectorAll(':scope > div');
+
+  // col 1 — image
+  const imageCol = cols[0];
+  if (imageCol) {
+    const picture = imageCol.querySelector('picture');
     if (picture) {
       const imgWrap = document.createElement('div');
       imgWrap.classList.add('ga-slide-image');
@@ -16,62 +18,76 @@ function buildSlide(slideBlock, index) {
     }
   }
 
-  // nested slide content
-  const contentBlock = slideBlock.querySelector('.gallery-accordion-slide-content');
-  if (contentBlock) {
+  // col 2 — title + description
+  const textCol = cols[1];
+  if (textCol) {
     const contentWrap = document.createElement('div');
     contentWrap.classList.add('ga-slide-content');
-    const h2 = contentBlock.querySelector('h2');
-    const p = contentBlock.querySelector('p');
-    const a = contentBlock.querySelector('a');
+    const h2 = textCol.querySelector('h2');
+    const p = textCol.querySelector('p');
     if (h2) contentWrap.append(h2);
     if (p) contentWrap.append(p);
-    if (a) { a.classList.add('ga-slide-cta'); contentWrap.append(a); }
     slide.append(contentWrap);
+  }
+
+  // col 3 — cta
+  const ctaCol = cols[2];
+  if (ctaCol) {
+    const a = ctaCol.querySelector('a');
+    if (a) {
+      a.classList.add('ga-slide-cta');
+      slide.querySelector('.ga-slide-content')?.append(a);
+    }
   }
 
   return slide;
 }
 
-function initGalleryCarousel(carouselBlock) {
-  const autoplay = carouselBlock.dataset.autoplay === 'true';
-  const interval = parseInt(carouselBlock.dataset.interval || '5000', 10);
-  const slides = [...carouselBlock.querySelectorAll(':scope > .gallery-accordion-slide')];
+function initCarousel(carouselBlock) {
+  // each direct child div = one slide row
+  const rows = [...carouselBlock.querySelectorAll(':scope > div')];
 
-  if (!slides.length) return;
+  // read autoplay from last col of first row
+  const firstRow = rows[0];
+  const lastCol = firstRow?.querySelectorAll(':scope > div');
+  const autoplayCol = lastCol?.[lastCol.length - 1];
+  const autoplay = autoplayCol?.textContent?.trim() === 'true';
+  const interval = 5000;
 
-  // build slide list
+  if (!rows.length) return;
+
+  // build slides
   const slideList = document.createElement('ul');
   slideList.classList.add('ga-carousel-slides');
-  slides.forEach((slide, i) => slideList.append(buildSlide(slide, i)));
+  rows.forEach((row, i) => slideList.append(buildSlide(row, i)));
 
-  // prev / next
+  // prev / next buttons
   const prevBtn = document.createElement('button');
   prevBtn.classList.add('ga-carousel-prev');
-  prevBtn.setAttribute('aria-label', 'Previous slide');
+  prevBtn.setAttribute('aria-label', 'Previous');
   prevBtn.innerHTML = '&#8249;';
 
   const nextBtn = document.createElement('button');
   nextBtn.classList.add('ga-carousel-next');
-  nextBtn.setAttribute('aria-label', 'Next slide');
+  nextBtn.setAttribute('aria-label', 'Next');
   nextBtn.innerHTML = '&#8250;';
 
   // dots
   const dotsWrap = document.createElement('div');
   dotsWrap.classList.add('ga-carousel-dots');
-  slides.forEach((_, i) => {
+  rows.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.classList.add('ga-carousel-dot');
     dot.dataset.dotIndex = i;
-    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.setAttribute('aria-label', `Slide ${i + 1}`);
     if (i === 0) dot.classList.add('active');
     dotsWrap.append(dot);
   });
 
-  // slide counter
+  // counter
   const counter = document.createElement('span');
   counter.classList.add('ga-carousel-counter');
-  counter.textContent = `1 / ${slides.length}`;
+  counter.textContent = `1 / ${rows.length}`;
 
   // rebuild carousel
   carouselBlock.innerHTML = '';
@@ -82,7 +98,7 @@ function initGalleryCarousel(carouselBlock) {
   let timer = null;
 
   function goTo(index) {
-    const allSlides = [...slideList.querySelectorAll('.gallery-accordion-slide')];
+    const allSlides = [...slideList.querySelectorAll('.ga-slide')];
     const allDots = [...dotsWrap.querySelectorAll('.ga-carousel-dot')];
     allSlides[current].classList.remove('active');
     allDots[current].classList.remove('active');
@@ -102,7 +118,6 @@ function initGalleryCarousel(carouselBlock) {
     if (e.key === 'ArrowRight') goTo(current + 1);
   });
 
-  // autoplay
   function startAutoplay() { timer = setInterval(() => goTo(current + 1), interval); }
   function stopAutoplay() { clearInterval(timer); }
   if (autoplay) startAutoplay();
@@ -118,16 +133,16 @@ function buildAccordionItem(itemBlock, index) {
   const wrapper = document.createElement('div');
   wrapper.classList.add('ga-item');
 
+  // get summary text from first div content
+  const summaryEl = itemBlock.querySelector('h2, h3, p, div');
+  const titleText = summaryEl ? summaryEl.textContent.trim() : `Section ${index + 1}`;
+
   // header button
   const header = document.createElement('button');
   header.classList.add('ga-item-header');
   header.id = `ga-header-${index}`;
   header.setAttribute('aria-expanded', index === 0 ? 'true' : 'false');
   header.setAttribute('aria-controls', `ga-panel-${index}`);
-
-  // get title text from summary field
-  const summaryEl = itemBlock.querySelector('h2, h3, p, .gallery-accordion-item-summary');
-  const titleText = summaryEl ? summaryEl.textContent.trim() : `Section ${index + 1}`;
 
   const titleSpan = document.createElement('span');
   titleSpan.classList.add('ga-item-title');
@@ -148,10 +163,10 @@ function buildAccordionItem(itemBlock, index) {
   panel.setAttribute('aria-labelledby', `ga-header-${index}`);
   if (index === 0) panel.classList.add('open');
 
-  // find nested carousel and init it
+  // find nested carousel and init
   const carousel = itemBlock.querySelector(':scope > .gallery-accordion-carousel');
   if (carousel) {
-    initGalleryCarousel(carousel);
+    initCarousel(carousel);
     panel.append(carousel);
   }
 

@@ -77,19 +77,6 @@
     ]
   },
   {
-    "id": "gallery-accordion-carousel",
-    "components": [
-      "gallery-accordion-slide"
-    ]
-  },
-  {
-    "id": "gallery-accordion-slide",
-    "components": [
-      "gallery-accordion-slide-image",
-      "gallery-accordion-slide-content"
-    ]
-  },
-  {
     "id": "tabs",
     "components": [
       "tabs-item"

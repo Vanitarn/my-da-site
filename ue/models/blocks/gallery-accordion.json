@@ -33,7 +33,7 @@
       "plugins": {
         "da": {
           "name": "gallery-accordion-carousel",
-          "rows": 1,
+          "rows": 2,
           "columns": 4,
           "fields": [
             { "name": "image",       "selector": "div:nth-child(1)>picture>img[src]" },

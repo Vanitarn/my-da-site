@@ -1,10 +1,10 @@
-function buildSlide(carouselRow, index) {
+function buildSlide(rowEl, index) {
   const slide = document.createElement('li');
   slide.classList.add('ga-slide');
   slide.dataset.index = index;
   if (index === 0) slide.classList.add('active');
 
-  const cols = carouselRow.querySelectorAll(':scope > div');
+  const cols = [...rowEl.children];
 
   // col 1 — image
   const imageCol = cols[0];
@@ -19,15 +19,15 @@ function buildSlide(carouselRow, index) {
   }
 
   // col 2 — title + description
+  const contentWrap = document.createElement('div');
+  contentWrap.classList.add('ga-slide-content');
+
   const textCol = cols[1];
   if (textCol) {
-    const contentWrap = document.createElement('div');
-    contentWrap.classList.add('ga-slide-content');
     const h2 = textCol.querySelector('h2');
     const p = textCol.querySelector('p');
     if (h2) contentWrap.append(h2);
     if (p) contentWrap.append(p);
-    slide.append(contentWrap);
   }
 
   // col 3 — cta
@@ -36,40 +36,37 @@ function buildSlide(carouselRow, index) {
     const a = ctaCol.querySelector('a');
     if (a) {
       a.classList.add('ga-slide-cta');
-      slide.querySelector('.ga-slide-content')?.append(a);
+      contentWrap.append(a);
     }
   }
 
+  slide.append(contentWrap);
   return slide;
 }
 
 function initCarousel(carouselBlock) {
-  // each direct child div = one slide row
   const rows = [...carouselBlock.querySelectorAll(':scope > div')];
-
-  // read autoplay from last col of first row
-  const firstRow = rows[0];
-  const lastCol = firstRow?.querySelectorAll(':scope > div');
-  const autoplayCol = lastCol?.[lastCol.length - 1];
-  const autoplay = autoplayCol?.textContent?.trim() === 'true';
-  const interval = 5000;
-
   if (!rows.length) return;
+
+  // read autoplay from col 4 of first row
+  const firstRowCols = [...rows[0].children];
+  const autoplay = firstRowCols[3]?.textContent?.trim() === 'true';
+  const interval = 5000;
 
   // build slides
   const slideList = document.createElement('ul');
   slideList.classList.add('ga-carousel-slides');
   rows.forEach((row, i) => slideList.append(buildSlide(row, i)));
 
-  // prev / next buttons
+  // prev / next
   const prevBtn = document.createElement('button');
   prevBtn.classList.add('ga-carousel-prev');
-  prevBtn.setAttribute('aria-label', 'Previous');
+  prevBtn.setAttribute('aria-label', 'Previous slide');
   prevBtn.innerHTML = '&#8249;';
 
   const nextBtn = document.createElement('button');
   nextBtn.classList.add('ga-carousel-next');
-  nextBtn.setAttribute('aria-label', 'Next');
+  nextBtn.setAttribute('aria-label', 'Next slide');
   nextBtn.innerHTML = '&#8250;';
 
   // dots
@@ -79,7 +76,7 @@ function initCarousel(carouselBlock) {
     const dot = document.createElement('button');
     dot.classList.add('ga-carousel-dot');
     dot.dataset.dotIndex = i;
-    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
     if (i === 0) dot.classList.add('active');
     dotsWrap.append(dot);
   });
@@ -126,18 +123,18 @@ function initCarousel(carouselBlock) {
 }
 
 /* =============================================
-   ACCORDION HELPERS
+   ACCORDION
    ============================================= */
 
 function buildAccordionItem(itemBlock, index) {
   const wrapper = document.createElement('div');
   wrapper.classList.add('ga-item');
 
-  // get summary text from first div content
-  const summaryEl = itemBlock.querySelector('h2, h3, p, div');
-  const titleText = summaryEl ? summaryEl.textContent.trim() : `Section ${index + 1}`;
+  // summary text: .gallery-accordion-item > div(row) > div(col) > text
+  const firstCol = itemBlock.querySelector(':scope > div > div');
+  const titleText = firstCol ? firstCol.textContent.trim() : `Section ${index + 1}`;
 
-  // header button
+  // header
   const header = document.createElement('button');
   header.classList.add('ga-item-header');
   header.id = `ga-header-${index}`;
@@ -163,7 +160,7 @@ function buildAccordionItem(itemBlock, index) {
   panel.setAttribute('aria-labelledby', `ga-header-${index}`);
   if (index === 0) panel.classList.add('open');
 
-  // find nested carousel and init
+  // init carousel inside item
   const carousel = itemBlock.querySelector(':scope > .gallery-accordion-carousel');
   if (carousel) {
     initCarousel(carousel);
@@ -175,11 +172,9 @@ function buildAccordionItem(itemBlock, index) {
     const isOpen = panel.classList.contains('open');
     const accordion = wrapper.closest('.gallery-accordion');
 
-    // close all
     accordion.querySelectorAll('.ga-item-panel').forEach((p) => p.classList.remove('open'));
     accordion.querySelectorAll('.ga-item-header').forEach((h) => h.setAttribute('aria-expanded', 'false'));
 
-    // open current if was closed
     if (!isOpen) {
       panel.classList.add('open');
       header.setAttribute('aria-expanded', 'true');

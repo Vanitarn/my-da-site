@@ -42,7 +42,7 @@
   border-bottom: 2px solid #06c;
 }
 
-/* ── Title text ── */
+/* ── Title ── */
 .ga-item-title {
   font-size: 1rem;
   font-weight: 600;
@@ -66,7 +66,7 @@
   color: #06c;
 }
 
-/* ── Panel (collapsible) ── */
+/* ── Panel ── */
 .ga-item-panel {
   max-height: 0;
   overflow: hidden;
@@ -101,7 +101,7 @@
   min-height: 360px;
 }
 
-/* ── Individual slide ── */
+/* ── Slide ── */
 .ga-slide {
   position: absolute;
   inset: 0;
@@ -134,7 +134,7 @@
   display: block;
 }
 
-/* ── Slide content overlay ── */
+/* ── Slide content ── */
 .ga-slide-content {
   position: absolute;
   bottom: 48px;
@@ -159,7 +159,7 @@
   color: rgb(255 255 255 / 90%);
 }
 
-/* ── CTA button ── */
+/* ── CTA ── */
 .ga-slide-cta {
   display: inline-block;
   padding: 8px 20px;
@@ -235,7 +235,7 @@
   transform: scale(1.35);
 }
 
-/* ── Slide counter ── */
+/* ── Counter ── */
 .ga-carousel-counter {
   position: absolute;
   top: 12px;

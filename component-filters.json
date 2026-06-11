@@ -65,6 +65,31 @@
     ]
   },
   {
+    "id": "gallery-accordion",
+    "components": [
+      "gallery-accordion-item"
+    ]
+  },
+  {
+    "id": "gallery-accordion-item",
+    "components": [
+      "gallery-accordion-carousel"
+    ]
+  },
+  {
+    "id": "gallery-accordion-carousel",
+    "components": [
+      "gallery-accordion-slide"
+    ]
+  },
+  {
+    "id": "gallery-accordion-slide",
+    "components": [
+      "gallery-accordion-slide-image",
+      "gallery-accordion-slide-content"
+    ]
+  },
+  {
     "id": "tabs",
     "components": [
       "tabs-item"

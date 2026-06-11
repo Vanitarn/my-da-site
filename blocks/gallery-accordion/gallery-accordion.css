@@ -39,7 +39,7 @@
 
 .ga-item-header[aria-expanded='true'] {
   background: #fff;
-  border-bottom: 2px solid #0066cc;
+  border-bottom: 2px solid #06c;
 }
 
 /* ── Title text ── */
@@ -50,7 +50,7 @@
 }
 
 .ga-item-header[aria-expanded='true'] .ga-item-title {
-  color: #0066cc;
+  color: #06c;
 }
 
 /* ── Chevron ── */
@@ -63,7 +63,7 @@
 
 .ga-item-header[aria-expanded='true'] .ga-item-chevron {
   transform: rotate(180deg);
-  color: #0066cc;
+  color: #06c;
 }
 
 /* ── Panel (collapsible) ── */
@@ -141,7 +141,7 @@
   left: 0;
   right: 0;
   padding: 20px 24px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));
+  background: rgb(0 0 0 / 78%);
   color: #fff;
 }
 
@@ -156,14 +156,14 @@
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0 0 12px;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgb(255 255 255 / 90%);
 }
 
 /* ── CTA button ── */
 .ga-slide-cta {
   display: inline-block;
   padding: 8px 20px;
-  background: #0066cc;
+  background: #06c;
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
@@ -182,7 +182,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   color: #fff;
   border: none;
   padding: 10px 14px;
@@ -194,13 +194,18 @@
   transition: background 0.2s;
 }
 
-.ga-carousel-prev:hover,
-.ga-carousel-next:hover {
-  background: rgba(0, 0, 0, 0.85);
+.ga-carousel-prev {
+  left: 12px;
 }
 
-.ga-carousel-prev { left: 12px; }
-.ga-carousel-next { right: 12px; }
+.ga-carousel-next {
+  right: 12px;
+}
+
+.ga-carousel-prev:hover,
+.ga-carousel-next:hover {
+  background: rgb(0 0 0 / 85%);
+}
 
 /* ── Dots ── */
 .ga-carousel-dots {
@@ -217,7 +222,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgb(255 255 255 / 45%);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -234,7 +239,7 @@
   position: absolute;
   top: 12px;
   right: 16px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   color: #fff;
   font-size: 0.78rem;
   padding: 4px 10px;

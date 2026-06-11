@@ -315,6 +315,109 @@
     ]
   },
   {
+    "id": "gallery-accordion",
+    "fields": []
+  },
+  {
+    "id": "gallery-accordion-item",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "summary",
+        "label": "Section Title",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "gallery-accordion-carousel",
+    "fields": [
+      {
+        "component": "select",
+        "name": "autoplay",
+        "label": "Autoplay",
+        "valueType": "string",
+        "value": "false",
+        "options": [
+          {
+            "name": "Yes",
+            "value": "true"
+          },
+          {
+            "name": "No",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "interval",
+        "label": "Autoplay Interval (ms)",
+        "valueType": "number",
+        "value": "5000"
+      }
+    ]
+  },
+  {
+    "id": "gallery-accordion-slide",
+    "fields": [
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Slide Label (optional)",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "gallery-accordion-slide-image",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Alt Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "gallery-accordion-slide-content",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "ctaText",
+        "label": "CTA Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "ctaHref",
+        "label": "CTA Link",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "hero",
     "fields": [
       {

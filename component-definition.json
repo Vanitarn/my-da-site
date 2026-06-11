@@ -251,6 +251,106 @@
           }
         },
         {
+          "title": "Gallery Accordion",
+          "id": "gallery-accordion",
+          "model": "gallery-accordion",
+          "filter": "gallery-accordion",
+          "plugins": {
+            "da": {
+              "name": "gallery-accordion",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
+          "title": "Gallery Accordion Item",
+          "id": "gallery-accordion-item",
+          "model": "gallery-accordion-item",
+          "filter": "gallery-accordion-item",
+          "plugins": {
+            "da": {
+              "name": "gallery-accordion-item",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
+          "title": "Gallery Accordion Carousel",
+          "id": "gallery-accordion-carousel",
+          "model": "gallery-accordion-carousel",
+          "filter": "gallery-accordion-carousel",
+          "plugins": {
+            "da": {
+              "name": "gallery-accordion-carousel",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
+          "title": "Gallery Accordion Slide",
+          "id": "gallery-accordion-slide",
+          "model": "gallery-accordion-slide",
+          "filter": "gallery-accordion-slide",
+          "plugins": {
+            "da": {
+              "name": "gallery-accordion-slide",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
+          "title": "Gallery Accordion Slide Image",
+          "id": "gallery-accordion-slide-image",
+          "model": "gallery-accordion-slide-image",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"gallery-accordion-slide-image\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><img loading=\"lazy\" src=\"\" alt=\"\"></picture></div></div></div>",
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div>div>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div>div>picture>img[alt]"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Gallery Accordion Slide Content",
+          "id": "gallery-accordion-slide-content",
+          "model": "gallery-accordion-slide-content",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"gallery-accordion-slide-content\"><div><div><h2></h2><p></p><a href=\"\"></a></div></div></div>",
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div>div>h2"
+                },
+                {
+                  "name": "description",
+                  "selector": "div>div>p"
+                },
+                {
+                  "name": "ctaText",
+                  "selector": "div>div>a"
+                },
+                {
+                  "name": "ctaHref",
+                  "selector": "div>div>a[href]"
+                }
+              ]
+            }
+          }
+        },
+        {
           "title": "Hero",
           "id": "hero",
           "model": "hero",

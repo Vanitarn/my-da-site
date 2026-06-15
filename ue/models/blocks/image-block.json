@@ -1,0 +1,111 @@
+{
+  "definitions": [
+    {
+      "title": "Image Block",
+      "id": "image-block",
+      "model": "image-block",
+      "plugins": {
+        "da": {
+          "name": "image-block",
+          "rows": 1,
+          "columns": 1
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "image-block",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "image",
+          "label": "Image",
+          "valueType": "string",
+          "multi": false,
+          "required": true,
+          "description": "Row 1, Col 1 — Upload desktop image"
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Image Alt Text",
+          "valueType": "string",
+          "required": true,
+          "description": "Row 1, Col 2 — Alt text for desktop image"
+        },
+        {
+          "component": "reference",
+          "name": "mobImage",
+          "label": "Mobile Image",
+          "valueType": "string",
+          "multi": false,
+          "description": "Row 1, Col 3 — Upload mobile image"
+        },
+        {
+          "component": "text",
+          "name": "mobImageAlt",
+          "label": "Mobile Image Alt Text",
+          "valueType": "string",
+          "description": "Row 1, Col 4 — Alt text for mobile image"
+        },
+        {
+          "component": "text",
+          "name": "imageblock_label",
+          "label": "Label",
+          "valueType": "string",
+          "description": "Row 2, Col 1 — Add a label"
+        },
+        {
+          "component": "richtext",
+          "name": "imageblock_rte",
+          "label": "Extended Image Description",
+          "valueType": "string",
+          "description": "Row 2, Col 2 — Enter the image description"
+        },
+        {
+          "component": "select",
+          "name": "classes_description",
+          "label": "Description Font Size",
+          "valueType": "string",
+          "description": "Row 2, Col 3",
+          "options": [
+            { "name": "100px", "value": "description-fs-100px" },
+            { "name": "60px",  "value": "description-fs-60px" },
+            { "name": "48px",  "value": "description-fs-48px" },
+            { "name": "36px",  "value": "description-fs-36px" },
+            { "name": "32px",  "value": "description-fs-32px" },
+            { "name": "28px",  "value": "description-fs-28px" },
+            { "name": "24px",  "value": "description-fs-24px" },
+            { "name": "20px",  "value": "description-fs-20px" },
+            { "name": "16px",  "value": "description-fs-16px" },
+            { "name": "14px",  "value": "description-fs-14px" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "squareEdges",
+          "label": "Square Edges",
+          "valueType": "string",
+          "description": "Row 3, Col 1 — Apply square edges on image",
+          "options": [
+            { "name": "Enable", "value": "true" },
+            { "name": "Disable", "value": "false" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "fullWidth",
+          "label": "Full Width",
+          "valueType": "string",
+          "description": "Row 3, Col 2 — Make image full width",
+          "options": [
+            { "name": "Enable", "value": "true" },
+            { "name": "Disable", "value": "false" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

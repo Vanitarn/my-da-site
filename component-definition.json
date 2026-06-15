@@ -344,6 +344,18 @@
           }
         },
         {
+          "title": "Image Block",
+          "id": "image-block",
+          "model": "image-block",
+          "plugins": {
+            "da": {
+              "name": "image-block",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
           "title": "Quote",
           "id": "quote",
           "model": "quote",

@@ -352,6 +352,11 @@
               "name": "image-block",
               "rows": 5,
               "columns": 1,
+              "classes": [
+                {
+                  "name": "classes_description"
+                }
+              ],
               "fields": [
                 {
                   "name": "image",

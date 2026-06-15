@@ -1,0 +1,134 @@
+/* =============================================
+   IMAGE BLOCK — DA Compatible
+   ============================================= */
+
+.image-block {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* ── Image Area ── */
+.image-block .image-area {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.image-block .image-area picture {
+  display: block;
+  width: 100%;
+}
+
+.image-block .image-area img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ── Mobile Image — hidden on desktop ── */
+.image-block .image-area .mobile-image {
+  display: none;
+}
+
+/* ── Desktop Image — hidden on mobile ── */
+.image-block .image-area .desktop-image {
+  display: block;
+}
+
+/* ── Content Area ── */
+.image-block .content-area {
+  margin-top: 12px;
+}
+
+/* ── Label ── */
+.image-block .image-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Description ── */
+.image-block .image-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.image-block .image-description p {
+  margin: 0 0 8px;
+}
+
+.image-block .image-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Full Width Variant ── */
+.image-block.image-full-width {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  display: block;
+}
+
+.image-block.image-full-width .image-area {
+  display: block;
+  border-radius: 0;
+}
+
+.image-block.image-full-width .image-area img {
+  border-radius: 0;
+}
+
+/* ── Square Edges Variant ── */
+.image-block.enable-square-edges .image-area {
+  border-radius: 0;
+}
+
+.image-block.enable-square-edges .image-area img {
+  border-radius: 0;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+
+@media (width <= 768px) {
+  /* show mobile image on mobile */
+  .image-block .image-area .mobile-image {
+    display: block;
+  }
+
+  /* hide desktop image on mobile */
+  .image-block .image-area .desktop-image {
+    display: none;
+  }
+
+  .image-block {
+    padding: 12px;
+  }
+
+  .image-block .image-description {
+    font-size: 0.9rem;
+  }
+}
+
+@media (width >= 769px) {
+  /* show desktop image on desktop */
+  .image-block .image-area .desktop-image {
+    display: block;
+  }
+
+  /* hide mobile image on desktop */
+  .image-block .image-area .mobile-image {
+    display: none;
+  }
+}

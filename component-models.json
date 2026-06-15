@@ -421,19 +421,11 @@
       {
         "component": "reference",
         "name": "image",
-        "label": "Image",
+        "label": "Desktop Image",
         "valueType": "string",
         "multi": false,
         "required": true,
-        "description": "Row 1, Col 1 — Upload desktop image"
-      },
-      {
-        "component": "text",
-        "name": "imageAlt",
-        "label": "Image Alt Text",
-        "valueType": "string",
-        "required": true,
-        "description": "Row 1, Col 2 — Alt text for desktop image"
+        "description": "Row 1, Col 1 — Upload desktop image (alt text set on image)"
       },
       {
         "component": "reference",
@@ -441,35 +433,28 @@
         "label": "Mobile Image",
         "valueType": "string",
         "multi": false,
-        "description": "Row 1, Col 3 — Upload mobile image"
-      },
-      {
-        "component": "text",
-        "name": "mobImageAlt",
-        "label": "Mobile Image Alt Text",
-        "valueType": "string",
-        "description": "Row 1, Col 4 — Alt text for mobile image"
+        "description": "Row 1, Col 2 — Upload mobile image (alt text set on image)"
       },
       {
         "component": "text",
         "name": "imageblock_label",
         "label": "Label",
         "valueType": "string",
-        "description": "Row 2, Col 1 — Add a label"
+        "description": "Row 1, Col 3 — Add a label (optional)"
       },
       {
         "component": "richtext",
         "name": "imageblock_rte",
         "label": "Extended Image Description",
         "valueType": "string",
-        "description": "Row 2, Col 2 — Enter the image description"
+        "description": "Row 2, Col 1 — Enter the image description"
       },
       {
         "component": "select",
         "name": "classes_description",
         "label": "Description Font Size",
         "valueType": "string",
-        "description": "Row 2, Col 3",
+        "description": "Row 2, Col 2",
         "options": [
           {
             "name": "100px",
@@ -518,7 +503,7 @@
         "name": "squareEdges",
         "label": "Square Edges",
         "valueType": "string",
-        "description": "Row 3, Col 1 — Apply square edges on image",
+        "description": "Row 2, Col 3 — Apply square edges on image",
         "options": [
           {
             "name": "Enable",
@@ -535,7 +520,7 @@
         "name": "fullWidth",
         "label": "Full Width",
         "valueType": "string",
-        "description": "Row 3, Col 2 — Make image full width",
+        "description": "Row 2, Col 4 — Make image full width",
         "options": [
           {
             "name": "Enable",

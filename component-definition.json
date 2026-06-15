@@ -350,44 +350,40 @@
           "plugins": {
             "da": {
               "name": "image-block",
-              "rows": 2,
-              "columns": 4,
+              "rows": 5,
+              "columns": 1,
               "fields": [
                 {
                   "name": "image",
-                  "selector": "div:nth-child(1)>div:nth-child(1)>picture>img[src]"
+                  "selector": "div:nth-child(1)>picture>img[src]"
                 },
                 {
                   "name": "imageAlt",
-                  "selector": "div:nth-child(1)>div:nth-child(1)>picture>img[alt]"
+                  "selector": "div:nth-child(1)>picture>img[alt]"
                 },
                 {
                   "name": "mobImage",
-                  "selector": "div:nth-child(1)>div:nth-child(2)>picture>img[src]"
+                  "selector": "div:nth-child(2)>picture>img[src]"
                 },
                 {
                   "name": "mobImageAlt",
-                  "selector": "div:nth-child(1)>div:nth-child(2)>picture>img[alt]"
+                  "selector": "div:nth-child(2)>picture>img[alt]"
                 },
                 {
                   "name": "imageblock_label",
-                  "selector": "div:nth-child(1)>div:nth-child(3)"
+                  "selector": "div:nth-child(3)>:first-child"
                 },
                 {
                   "name": "imageblock_rte",
-                  "selector": "div:nth-child(2)>div:nth-child(1)"
-                },
-                {
-                  "name": "classes_description",
-                  "selector": "div:nth-child(2)>div:nth-child(2)>:first-child"
+                  "selector": "div:nth-child(3)"
                 },
                 {
                   "name": "squareEdges",
-                  "selector": "div:nth-child(2)>div:nth-child(3)>:first-child"
+                  "selector": "div:nth-child(4)>:first-child"
                 },
                 {
                   "name": "fullWidth",
-                  "selector": "div:nth-child(2)>div:nth-child(4)>:first-child"
+                  "selector": "div:nth-child(5)>:first-child"
                 }
               ]
             }

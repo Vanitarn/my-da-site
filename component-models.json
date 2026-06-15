@@ -425,7 +425,7 @@
         "valueType": "string",
         "multi": false,
         "required": true,
-        "description": "Row 1, Col 1 — Upload desktop image (alt text set on image)"
+        "description": "Row 1 — Upload desktop image (alt text set on image)"
       },
       {
         "component": "reference",
@@ -433,77 +433,21 @@
         "label": "Mobile Image",
         "valueType": "string",
         "multi": false,
-        "description": "Row 1, Col 2 — Upload mobile image (alt text set on image)"
-      },
-      {
-        "component": "text",
-        "name": "imageblock_label",
-        "label": "Label",
-        "valueType": "string",
-        "description": "Row 1, Col 3 — Add a label (optional)"
+        "description": "Row 2 — Upload mobile image (alt text set on image)"
       },
       {
         "component": "richtext",
         "name": "imageblock_rte",
-        "label": "Extended Image Description",
+        "label": "Label + Description",
         "valueType": "string",
-        "description": "Row 2, Col 1 — Enter the image description"
-      },
-      {
-        "component": "select",
-        "name": "classes_description",
-        "label": "Description Font Size",
-        "valueType": "string",
-        "description": "Row 2, Col 2",
-        "options": [
-          {
-            "name": "100px",
-            "value": "description-fs-100px"
-          },
-          {
-            "name": "60px",
-            "value": "description-fs-60px"
-          },
-          {
-            "name": "48px",
-            "value": "description-fs-48px"
-          },
-          {
-            "name": "36px",
-            "value": "description-fs-36px"
-          },
-          {
-            "name": "32px",
-            "value": "description-fs-32px"
-          },
-          {
-            "name": "28px",
-            "value": "description-fs-28px"
-          },
-          {
-            "name": "24px",
-            "value": "description-fs-24px"
-          },
-          {
-            "name": "20px",
-            "value": "description-fs-20px"
-          },
-          {
-            "name": "16px",
-            "value": "description-fs-16px"
-          },
-          {
-            "name": "14px",
-            "value": "description-fs-14px"
-          }
-        ]
+        "description": "Row 3 — First line = label, remaining lines = description"
       },
       {
         "component": "select",
         "name": "squareEdges",
         "label": "Square Edges",
         "valueType": "string",
-        "description": "Row 2, Col 3 — Apply square edges on image",
+        "description": "Row 4 — Apply square edges on image",
         "options": [
           {
             "name": "Enable",
@@ -520,7 +464,7 @@
         "name": "fullWidth",
         "label": "Full Width",
         "valueType": "string",
-        "description": "Row 2, Col 4 — Make image full width",
+        "description": "Row 5 — Make image full width",
         "options": [
           {
             "name": "Enable",

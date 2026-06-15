@@ -1,134 +1,189 @@
 /* =============================================
-   IMAGE BLOCK — DA Compatible
+   IMAGE BLOCK
    ============================================= */
 
-.image-block {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
-  box-sizing: border-box;
+/* ── Lists inside image-block ── */
+.image-block-wrapper ul {
+  list-style-type: disc;
 }
 
-/* ── Image Area ── */
-.image-block .image-area {
-  position: relative;
+.image-block-wrapper ol,
+.image-block-wrapper ul {
+  padding-left: var(--lds-g-spacing-150, 1.5rem);
+  padding-top: var(--lds-g-spacing-200, 1rem);
+}
+
+.image-block-wrapper ol {
+  list-style-type: decimal;
+}
+
+.image-block-wrapper ol li,
+.image-block-wrapper ul li {
+  margin-left: var(--lds-g-spacing-200, 1rem);
+}
+
+.image-block-wrapper ol li:not(:last-child),
+.image-block-wrapper ul li:not(:last-child) {
+  margin-bottom: 0.625em;
+}
+
+/* ── Container ── */
+.image-block-wrapper .image-block-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  justify-content: flex-start;
+  padding: 0;
   width: 100%;
+}
+
+/* ── Image area ── */
+.image-block-wrapper .image-area {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 1 1 0%;
+  height: 100%;
+  justify-content: center;
   overflow: hidden;
-  border-radius: 8px;
-}
-
-.image-block .image-area picture {
-  display: block;
   width: 100%;
 }
 
-.image-block .image-area img {
-  width: 100%;
-  height: auto;
+.image-block-wrapper .image-area img {
   display: block;
+  height: 100%;
+  max-width: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  width: auto;
 }
 
-/* ── Mobile Image — hidden on desktop ── */
-.image-block .image-area .mobile-image {
+/* ── Label icon ── */
+.image-block-wrapper .image-label-icon {
+  align-items: center;
+  display: inline-flex;
+  height: 1.5rem;
+  transition: transform 0.2s;
+  vertical-align: middle;
+  width: 1.5rem;
+}
+
+.image-block-wrapper .image-label-icon img {
+  transition: transform 0.2s;
+  width: 18px;
+  height: 18px;
+  top: 2px;
+  position: relative;
+}
+
+/* ── Rounded edges (default) ── */
+.image-block-container .rounded-edges img,
+.image-block-wrapper .image-area.rounded-edges img {
+  border-radius: var(--lds-g-radius-8, 8px);
+}
+
+/* ── Desktop/mobile visibility — mobile first ── */
+.image-block-wrapper .image-area .desktop-image-only {
   display: none;
 }
 
-/* ── Desktop Image — hidden on mobile ── */
-.image-block .image-area .desktop-image {
+.image-block-wrapper .image-area .mobile-image-only {
   display: block;
-}
-
-/* ── Content Area ── */
-.image-block .content-area {
-  margin-top: 12px;
 }
 
 /* ── Label ── */
-.image-block .image-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #555;
-  margin: 0 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.image-block-wrapper .image-label {
+  align-items: center;
+  align-self: flex-start;
+  color: var(--lds-g-color-palette-tertiary-001);
+  cursor: pointer;
+  display: flex;
+  font-family: Ringside, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 900;
+  gap: 8px;
+  line-height: 24px;
+  margin-top: var(--lds-g-spacing-300, 1.5rem);
+  padding-bottom: var(--lds-g-font-size-neg-1, 0.25rem);
+}
+
+.image-block-wrapper .image-label-icon.rotated img {
+  transform: rotate(180deg);
 }
 
 /* ── Description ── */
-.image-block .image-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #333;
+.image-block-wrapper .image-description {
+  background: inherit;
+  border-radius: 24px;
 }
 
-.image-block .image-description p {
-  margin: 0 0 8px;
+.image-block-wrapper .image-description ol {
+  padding: 0 var(--lds-g-spacing-300, 1.5rem);
 }
 
-.image-block .image-description p:last-child {
-  margin-bottom: 0;
-}
-
-/* ── Full Width Variant ── */
+/* ── Full-width variant ── */
 .image-block.image-full-width {
   width: 100%;
-  max-width: none;
-  padding: 0;
   display: block;
+  padding: 0 !important;
+  max-width: none;
 }
 
 .image-block.image-full-width .image-area {
   display: block;
-  border-radius: 0;
 }
 
-.image-block.image-full-width .image-area img {
-  border-radius: 0;
-}
-
-/* ── Square Edges Variant ── */
-.image-block.enable-square-edges .image-area {
-  border-radius: 0;
-}
-
+/* ── Square-edges variant ── */
 .image-block.enable-square-edges .image-area img {
   border-radius: 0;
 }
 
+/* ── Premium background override ── */
+.lds-content-section-bg-background-premium .image-block-wrapper .image-label-icon img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%)
+    hue-rotate(190deg) brightness(104%) contrast(100%);
+}
+
 /* =============================================
-   RESPONSIVE
+   RESPONSIVE — tablet (min-width: 600px)
    ============================================= */
 
-@media (width <= 768px) {
-  /* show mobile image on mobile */
-  .image-block .image-area .mobile-image {
-    display: block;
-  }
-
-  /* hide desktop image on mobile */
-  .image-block .image-area .desktop-image {
-    display: none;
-  }
-
-  .image-block {
-    padding: 12px;
-  }
-
-  .image-block .image-description {
-    font-size: 0.9rem;
+@media (width >= 600px) {
+  .image-block-wrapper .image-label {
+    font: var(--lds-g-typography-ringside-special-cta-text-link-default);
   }
 }
 
-@media (width >= 769px) {
-  /* show desktop image on desktop */
-  .image-block .image-area .desktop-image {
+/* =============================================
+   RESPONSIVE — desktop (min-width: 900px)
+   ============================================= */
+
+@media (width >= 900px) {
+  .image-block-wrapper .image-area .desktop-image-only {
     display: block;
   }
 
-  /* hide mobile image on desktop */
-  .image-block .image-area .mobile-image {
+  .image-block-wrapper .image-area .mobile-image-only {
     display: none;
   }
+
+  .image-block-wrapper .image-label {
+    margin-top: var(--lds-g-spacing-500, 2.5rem);
+  }
+
+  .accordion .image-block-wrapper .image-area {
+    max-width: 100%;
+    padding-bottom: var(--lds-g-spacing-300, 1.5rem);
+    padding-top: var(--lds-g-spacing-300, 1.5rem);
+  }
+
+  .image-block-wrapper .image-area img {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    width: auto;
+  }
 }
+

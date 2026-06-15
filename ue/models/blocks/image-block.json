@@ -7,20 +7,19 @@
       "plugins": {
         "da": {
           "name": "image-block",
-          "rows": 3,
+          "rows": 2,
           "columns": 4,
           "fields": [
-            { "name": "image",               "selector": "div:nth-child(1)>div:nth-child(1)>picture>img[src]" },
-            { "name": "imageAlt",            "selector": "div:nth-child(1)>div:nth-child(2)>:first-child" },
-            { "name": "mobImage",            "selector": "div:nth-child(1)>div:nth-child(3)>picture>img[src]" },
-            { "name": "mobImageAlt",         "selector": "div:nth-child(1)>div:nth-child(4)>:first-child" },
+            { "name": "image",            "selector": "div:nth-child(1)>div:nth-child(1)>picture>img[src]" },
+            { "name": "imageAlt",         "selector": "div:nth-child(1)>div:nth-child(1)>picture>img[alt]" },
+            { "name": "mobImage",         "selector": "div:nth-child(1)>div:nth-child(2)>picture>img[src]" },
+            { "name": "mobImageAlt",      "selector": "div:nth-child(1)>div:nth-child(2)>picture>img[alt]" },
+            { "name": "imageblock_label", "selector": "div:nth-child(1)>div:nth-child(3)" },
 
-            { "name": "imageblock_label",    "selector": "div:nth-child(2)>div:nth-child(1)" },
-            { "name": "imageblock_rte",      "selector": "div:nth-child(2)>div:nth-child(2)" },
-            { "name": "classes_description", "selector": "div:nth-child(2)>div:nth-child(3)>:first-child" },
-
-            { "name": "squareEdges",         "selector": "div:nth-child(3)>div:nth-child(1)>:first-child" },
-            { "name": "fullWidth",           "selector": "div:nth-child(3)>div:nth-child(2)>:first-child" }
+            { "name": "imageblock_rte",      "selector": "div:nth-child(2)>div:nth-child(1)" },
+            { "name": "classes_description", "selector": "div:nth-child(2)>div:nth-child(2)>:first-child" },
+            { "name": "squareEdges",         "selector": "div:nth-child(2)>div:nth-child(3)>:first-child" },
+            { "name": "fullWidth",           "selector": "div:nth-child(2)>div:nth-child(4)>:first-child" }
           ]
         }
       }
@@ -33,19 +32,11 @@
         {
           "component": "reference",
           "name": "image",
-          "label": "Image",
+          "label": "Desktop Image",
           "valueType": "string",
           "multi": false,
           "required": true,
-          "description": "Row 1, Col 1 — Upload desktop image"
-        },
-        {
-          "component": "text",
-          "name": "imageAlt",
-          "label": "Image Alt Text",
-          "valueType": "string",
-          "required": true,
-          "description": "Row 1, Col 2 — Alt text for desktop image"
+          "description": "Row 1, Col 1 — Upload desktop image (alt text set on image)"
         },
         {
           "component": "reference",
@@ -53,35 +44,28 @@
           "label": "Mobile Image",
           "valueType": "string",
           "multi": false,
-          "description": "Row 1, Col 3 — Upload mobile image"
-        },
-        {
-          "component": "text",
-          "name": "mobImageAlt",
-          "label": "Mobile Image Alt Text",
-          "valueType": "string",
-          "description": "Row 1, Col 4 — Alt text for mobile image"
+          "description": "Row 1, Col 2 — Upload mobile image (alt text set on image)"
         },
         {
           "component": "text",
           "name": "imageblock_label",
           "label": "Label",
           "valueType": "string",
-          "description": "Row 2, Col 1 — Add a label"
+          "description": "Row 1, Col 3 — Add a label (optional)"
         },
         {
           "component": "richtext",
           "name": "imageblock_rte",
           "label": "Extended Image Description",
           "valueType": "string",
-          "description": "Row 2, Col 2 — Enter the image description"
+          "description": "Row 2, Col 1 — Enter the image description"
         },
         {
           "component": "select",
           "name": "classes_description",
           "label": "Description Font Size",
           "valueType": "string",
-          "description": "Row 2, Col 3",
+          "description": "Row 2, Col 2",
           "options": [
             { "name": "100px", "value": "description-fs-100px" },
             { "name": "60px",  "value": "description-fs-60px" },
@@ -100,7 +84,7 @@
           "name": "squareEdges",
           "label": "Square Edges",
           "valueType": "string",
-          "description": "Row 3, Col 1 — Apply square edges on image",
+          "description": "Row 2, Col 3 — Apply square edges on image",
           "options": [
             { "name": "Enable",  "value": "true" },
             { "name": "Disable", "value": "false" }
@@ -111,7 +95,7 @@
           "name": "fullWidth",
           "label": "Full Width",
           "valueType": "string",
-          "description": "Row 3, Col 2 — Make image full width",
+          "description": "Row 2, Col 4 — Make image full width",
           "options": [
             { "name": "Enable",  "value": "true" },
             { "name": "Disable", "value": "false" }

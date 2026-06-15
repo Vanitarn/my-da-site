@@ -514,38 +514,18 @@
         ]
       },
       {
-        "component": "select",
+        "component": "checkbox",
         "name": "squareEdges",
         "label": "Square Edges",
-        "valueType": "string",
-        "description": "Row 4 — Apply square edges on image",
-        "options": [
-          {
-            "name": "Enable",
-            "value": "true"
-          },
-          {
-            "name": "Disable",
-            "value": "false"
-          }
-        ]
+        "valueType": "boolean",
+        "description": "Row 4 — Check to apply square edges on image"
       },
       {
-        "component": "select",
+        "component": "checkbox",
         "name": "fullWidth",
         "label": "Full Width",
-        "valueType": "string",
-        "description": "Row 5 — Make image full width",
-        "options": [
-          {
-            "name": "Enable",
-            "value": "true"
-          },
-          {
-            "name": "Disable",
-            "value": "false"
-          }
-        ]
+        "valueType": "boolean",
+        "description": "Row 5 — Check to make the image full width"
       }
     ]
   },

@@ -80,16 +80,16 @@
           "valueType": "string",
           "description": "Block option (not a row) — EDS: classes_ prefix puts value in table header. DA: author types in block header parentheses e.g. 'Image Block (description-fs-20px)'. JS reads block.classList.",
           "options": [
-            { "name": "100px", "value": "description-fs-100px" },
-            { "name": "60px",  "value": "description-fs-60px" },
-            { "name": "48px",  "value": "description-fs-48px" },
-            { "name": "36px",  "value": "description-fs-36px" },
-            { "name": "32px",  "value": "description-fs-32px" },
-            { "name": "28px",  "value": "description-fs-28px" },
-            { "name": "24px",  "value": "description-fs-24px" },
-            { "name": "20px",  "value": "description-fs-20px" },
-            { "name": "16px",  "value": "description-fs-16px" },
-            { "name": "14px",  "value": "description-fs-14px" }
+            { "name": "100px", "value": "descriptionfs100px" },
+            { "name": "60px",  "value": "descriptionfs60px" },
+            { "name": "48px",  "value": "descriptionfs48px" },
+            { "name": "36px",  "value": "descriptionfs36px" },
+            { "name": "32px",  "value": "descriptionfs32px" },
+            { "name": "28px",  "value": "descriptionfs28px" },
+            { "name": "24px",  "value": "descriptionfs24px" },
+            { "name": "20px",  "value": "descriptionfs20px" },
+            { "name": "16px",  "value": "descriptionfs16px" },
+            { "name": "14px",  "value": "descriptionfs14px" }
           ]
         },
         {

@@ -355,35 +355,35 @@
               "fields": [
                 {
                   "name": "image",
-                  "selector": "div:nth-child(1)>picture>img[src]"
+                  "selector": "div:nth-child(1)>div>picture>img[src]"
                 },
                 {
                   "name": "imageAlt",
-                  "selector": "div:nth-child(1)>picture>img[alt]"
+                  "selector": "div:nth-child(1)>div>picture>img[alt]"
                 },
                 {
                   "name": "mobImage",
-                  "selector": "div:nth-child(2)>picture>img[src]"
+                  "selector": "div:nth-child(2)>div>picture>img[src]"
                 },
                 {
                   "name": "mobImageAlt",
-                  "selector": "div:nth-child(2)>picture>img[alt]"
+                  "selector": "div:nth-child(2)>div>picture>img[alt]"
                 },
                 {
                   "name": "imageblock_label",
-                  "selector": "div:nth-child(3)>:first-child"
+                  "selector": "div:nth-child(3)>div>:first-child"
                 },
                 {
                   "name": "imageblock_rte",
-                  "selector": "div:nth-child(3)"
+                  "selector": "div:nth-child(3)>div"
                 },
                 {
                   "name": "squareEdges",
-                  "selector": "div:nth-child(4)>:first-child"
+                  "selector": "div:nth-child(4)>div>:first-child"
                 },
                 {
                   "name": "fullWidth",
-                  "selector": "div:nth-child(5)>:first-child"
+                  "selector": "div:nth-child(5)>div>:first-child"
                 }
               ]
             }

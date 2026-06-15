@@ -10,14 +10,14 @@
           "rows": 5,
           "columns": 1,
           "fields": [
-            { "name": "image",              "selector": "div:nth-child(1)>picture>img[src]" },
-            { "name": "imageAlt",           "selector": "div:nth-child(1)>picture>img[alt]" },
-            { "name": "mobImage",           "selector": "div:nth-child(2)>picture>img[src]" },
-            { "name": "mobImageAlt",        "selector": "div:nth-child(2)>picture>img[alt]" },
-            { "name": "imageblock_label",   "selector": "div:nth-child(3)>:first-child" },
-            { "name": "imageblock_rte",     "selector": "div:nth-child(3)" },
-            { "name": "squareEdges",        "selector": "div:nth-child(4)>:first-child" },
-            { "name": "fullWidth",          "selector": "div:nth-child(5)>:first-child" }
+            { "name": "image",              "selector": "div:nth-child(1)>div>picture>img[src]" },
+            { "name": "imageAlt",           "selector": "div:nth-child(1)>div>picture>img[alt]" },
+            { "name": "mobImage",           "selector": "div:nth-child(2)>div>picture>img[src]" },
+            { "name": "mobImageAlt",        "selector": "div:nth-child(2)>div>picture>img[alt]" },
+            { "name": "imageblock_label",   "selector": "div:nth-child(3)>div>:first-child" },
+            { "name": "imageblock_rte",     "selector": "div:nth-child(3)>div" },
+            { "name": "squareEdges",        "selector": "div:nth-child(4)>div>:first-child" },
+            { "name": "fullWidth",          "selector": "div:nth-child(5)>div>:first-child" }
           ]
         }
       }
@@ -34,7 +34,15 @@
           "valueType": "string",
           "multi": false,
           "required": true,
-          "description": "Row 1 — Upload desktop image (alt text set on image)"
+          "description": "Row 1 — Upload desktop image."
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Desktop Image Alt Text",
+          "valueType": "string",
+          "required": true,
+          "description": "Row 1 — Field-collapse: suffix 'Alt' merges with image reference → rendered as img[alt]"
         },
         {
           "component": "reference",
@@ -42,14 +50,47 @@
           "label": "Mobile Image",
           "valueType": "string",
           "multi": false,
-          "description": "Row 2 — Upload mobile image (alt text set on image)"
+          "description": "Row 2 — Upload mobile image. Falls back to desktop image if omitted."
+        },
+        {
+          "component": "text",
+          "name": "mobImageAlt",
+          "label": "Mobile Image Alt Text",
+          "valueType": "string",
+          "description": "Row 2 — Field-collapse: suffix 'Alt' merges with mobImage reference → rendered as img[alt]"
+        },
+        {
+          "component": "text",
+          "name": "imageblock_label",
+          "label": "Label",
+          "valueType": "string",
+          "description": "Row 3 — Label shown above the description (first line)"
         },
         {
           "component": "richtext",
           "name": "imageblock_rte",
-          "label": "Label + Description",
+          "label": "Extended Image Description",
           "valueType": "string",
-          "description": "Row 3 — First line = label, remaining lines = description"
+          "description": "Row 3 — Description content below the label"
+        },
+        {
+          "component": "select",
+          "name": "classes_description",
+          "label": "Description Font Size",
+          "valueType": "string",
+          "description": "Block option (not a row) — EDS: classes_ prefix puts value in table header. DA: author types in block header parentheses e.g. 'Image Block (description-fs-20px)'. JS reads block.classList.",
+          "options": [
+            { "name": "100px", "value": "description-fs-100px" },
+            { "name": "60px",  "value": "description-fs-60px" },
+            { "name": "48px",  "value": "description-fs-48px" },
+            { "name": "36px",  "value": "description-fs-36px" },
+            { "name": "32px",  "value": "description-fs-32px" },
+            { "name": "28px",  "value": "description-fs-28px" },
+            { "name": "24px",  "value": "description-fs-24px" },
+            { "name": "20px",  "value": "description-fs-20px" },
+            { "name": "16px",  "value": "description-fs-16px" },
+            { "name": "14px",  "value": "description-fs-14px" }
+          ]
         },
         {
           "component": "select",

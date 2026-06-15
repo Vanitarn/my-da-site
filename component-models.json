@@ -466,7 +466,7 @@
       },
       {
         "component": "select",
-        "name": "classes_description",
+        "name": "classesdescription",
         "label": "Description Font Size",
         "valueType": "string",
         "description": "Block option (not a row) — EDS: classes_ prefix puts value in table header. DA: author types in block header parentheses e.g. 'Image Block (description-fs-20px)'. JS reads block.classList.",

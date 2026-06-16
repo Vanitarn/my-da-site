@@ -466,7 +466,7 @@
       },
       {
         "component": "select",
-        "name": "classes",
+        "name": "classes_description",
         "label": "Description Font Size",
         "valueType": "string",
         "description": "Block option — selected value is written directly as CSS class on block e.g. 'Image Block (description-fs-20px)'",
@@ -514,8 +514,28 @@
         ]
       },
       {
+        "component": "select",
+        "name": "classes_backgroundColor",
+        "label": "Background Color",
+        "valueType": "string",
+        "description": "Block option — selected value is written as CSS class on block e.g. 'Image Block (surface-neutral)'",
+        "options": [
+          {
+            "name": "None",
+            "value": "none"
+          },
+          {
+            "name": "Surface Neutral",
+            "value": "surface-neutral"
+          },
+          {
+            "name": "Surface Base",
+            "value": "surface-base"
+          }
+        ]
+      },
+      {
         "component": "checkbox",
-        "name": "squareEdges",
         "label": "Square Edges",
         "valueType": "boolean",
         "value": false,

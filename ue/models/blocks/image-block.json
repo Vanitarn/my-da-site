@@ -75,7 +75,7 @@
         },
         {
           "component": "select",
-          "name": "classes_description",
+          "name": "classes",
           "label": "Description Font Size",
           "valueType": "string",
           "description": "Block option — selected value is written directly as CSS class on block e.g. 'Image Block (description-fs-20px)'",
@@ -94,7 +94,7 @@
         },
         {
           "component": "select",
-          "name": "classes_backgroundColor",
+          "name": "classes",
           "label": "Background Color",
           "valueType": "string",
           "description": "Block option — selected value is written as CSS class on block e.g. 'Image Block (surface-neutral)'",

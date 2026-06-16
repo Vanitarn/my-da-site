@@ -11,7 +11,7 @@
           "columns": 1,
           "classes": [
             {
-              "name": "classes_description"
+              "name": "classes"
             }
           ],
           "fields": [
@@ -80,10 +80,10 @@
         },
         {
           "component": "select",
-          "name": "classes_description",
+          "name": "classes",
           "label": "Description Font Size",
           "valueType": "string",
-          "description": "Block option (not a row) — EDS: classes_ prefix puts value in table header. DA: author types in block header parentheses e.g. 'Image Block (description-fs-20px)'. JS reads block.classList.",
+          "description": "Block option — selected value is written directly as CSS class on block e.g. 'Image Block (description-fs-20px)'",
           "options": [
             { "name": "100px", "value": "description-fs-100px" },
             { "name": "60px",  "value": "description-fs-60px" },

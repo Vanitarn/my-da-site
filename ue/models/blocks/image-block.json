@@ -76,28 +76,6 @@
           "description": "Row 3 — Description content below the label"
         },
         {
-          "component": "multiselect",
-          "name": "classes",
-          "label": "Style Options",
-          "valueType": "string",
-          "description": "Block option — each selected value is added as a CSS class on the block. Pick one font size and one background color.",
-          "options": [
-            { "name": "Font — 100px",          "value": "description-fs-100px" },
-            { "name": "Font — 60px",           "value": "description-fs-60px" },
-            { "name": "Font — 48px",           "value": "description-fs-48px" },
-            { "name": "Font — 36px",           "value": "description-fs-36px" },
-            { "name": "Font — 32px",           "value": "description-fs-32px" },
-            { "name": "Font — 28px",           "value": "description-fs-28px" },
-            { "name": "Font — 24px",           "value": "description-fs-24px" },
-            { "name": "Font — 20px",           "value": "description-fs-20px" },
-            { "name": "Font — 16px",           "value": "description-fs-16px" },
-            { "name": "Font — 14px",           "value": "description-fs-14px" },
-            { "name": "BG — None",             "value": "none" },
-            { "name": "BG — Surface Neutral",  "value": "surface-neutral" },
-            { "name": "BG — Surface Base",     "value": "surface-base" }
-          ]
-        },
-        {
           "component": "boolean",
           "name": "squareEdges",
           "label": "Square Edges",
@@ -138,7 +116,7 @@
         },
         {
           "component": "multiselect",
-          "name": "classes_property",
+          "name": "classes",
           "label": "Multiselect field",
           "valueType": "string",
           "options": [

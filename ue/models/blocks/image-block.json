@@ -96,19 +96,19 @@
           ]
         },
         {
-          "component": "checkbox",
+          "component": "boolean",
           "name": "squareEdges",
           "label": "Square Edges",
-          "valueType": "string",
-          "value": "",
+          "valueType": "boolean",
+          "value": false,
           "description": "Row 4 — Check to apply square edges on image"
         },
         {
-          "component": "checkbox",
+          "component": "boolean",
           "name": "fullWidth",
           "label": "Full Width",
-          "valueType": "string",
-          "value": "",
+          "valueType": "boolean",
+          "value": false,
           "description": "Row 5 — Check to make the image full width"
         }
       ]

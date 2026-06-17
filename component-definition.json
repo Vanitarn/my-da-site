@@ -350,7 +350,7 @@
           "plugins": {
             "da": {
               "name": "image-block",
-              "rows": 6,
+              "rows": 7,
               "columns": 1,
               "fields": [
                 {
@@ -388,6 +388,10 @@
                 {
                   "name": "instagramProfile",
                   "selector": "div:nth-child(6)>div>:first-child"
+                },
+                {
+                  "name": "checkbox",
+                  "selector": "div:nth-child(7)>div>:first-child"
                 }
               ]
             }

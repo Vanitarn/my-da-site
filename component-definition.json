@@ -350,7 +350,7 @@
           "plugins": {
             "da": {
               "name": "image-block",
-              "rows": 5,
+              "rows": 6,
               "columns": 1,
               "fields": [
                 {
@@ -384,6 +384,10 @@
                 {
                   "name": "fullWidth",
                   "selector": "div:nth-child(5)>div>:first-child"
+                },
+                {
+                  "name": "instagramProfile",
+                  "selector": "div:nth-child(6)>div>:first-child"
                 }
               ]
             }

@@ -7,7 +7,7 @@
       "plugins": {
         "da": {
           "name": "image-block",
-          "rows": 5,
+          "rows": 6,
           "columns": 1,
           "fields": [
             { "name": "image",              "selector": "div:nth-child(1)>div>picture>img[src]" },
@@ -17,7 +17,8 @@
             { "name": "imageblock_label",   "selector": "div:nth-child(3)>div>:first-child" },
             { "name": "imageblock_rte",     "selector": "div:nth-child(3)>div" },
             { "name": "squareEdges",        "selector": "div:nth-child(4)>div>:first-child" },
-            { "name": "fullWidth",          "selector": "div:nth-child(5)>div>:first-child" }
+            { "name": "fullWidth",          "selector": "div:nth-child(5)>div>:first-child" },
+            { "name": "instagramProfile",   "selector": "div:nth-child(6)>div>:first-child" }
           ]
         }
       }
@@ -110,6 +111,19 @@
           "valueType": "boolean",
           "value": false,
           "description": "Row 5 — Check to make the image full width"
+        },
+        {
+          "component": "checkbox-group",
+          "label": "Instagram Profile",
+          "name": "instagramProfile",
+          "valueType": "boolean",
+          "description": "Select if the Executive's Instagram profile is available",
+          "options": [
+            {
+              "name": "InstagramProfile",
+              "value": "true"
+            }
+          ]
         }
       ]
     }

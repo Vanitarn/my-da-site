@@ -569,6 +569,45 @@
             "value": "option2"
           }
         ]
+      },
+      {
+        "component": "multiselect",
+        "name": "classes_property",
+        "label": "Multiselect field",
+        "valueType": "string",
+        "required": true,
+        "options": [
+          {
+            "name": "Theme",
+            "children": [
+              {
+                "name": "Light",
+                "value": "light"
+              },
+              {
+                "name": "Dark",
+                "value": "dark"
+              }
+            ]
+          },
+          {
+            "name": "Type",
+            "children": [
+              {
+                "name": "Alpha",
+                "value": "alpha"
+              },
+              {
+                "name": "Beta",
+                "value": "beta"
+              },
+              {
+                "name": "Gamma",
+                "value": "gamma"
+              }
+            ]
+          }
+        ]
       }
     ]
   },

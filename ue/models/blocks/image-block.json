@@ -141,7 +141,6 @@
           "name": "classes_property",
           "label": "Multiselect field",
           "valueType": "string",
-          "required": true,
           "options": [
             {
               "name": "Theme",

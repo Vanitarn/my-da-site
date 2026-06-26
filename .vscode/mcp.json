@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "da-live-admin": {
+      "type": "streamable-http",
+      "url": "https://mcp.adobeaemcloud.com/adobe/mcp/da"
+    }
+  }
+}

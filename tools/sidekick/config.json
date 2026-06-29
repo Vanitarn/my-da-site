@@ -17,6 +17,12 @@
       "event": "experimentation"
     },
     {
+      "id": "quick-edit",
+      "title": "Quick Edit",
+      "environments": [ "dev", "preview" ],
+      "event": "quick-edit"
+    },
+    {
       "id": "aem-labs",
       "title": "AEM Labs",
       "environments": ["edit"],

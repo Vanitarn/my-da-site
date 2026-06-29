@@ -313,6 +313,30 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+
+  const loadQuickEdit = async (...args) => {
+    // eslint-disable-next-line import/no-cycle
+    const { default: initQuickEdit } = await import('../tools/quick-edit/quick-edit.js');
+    initQuickEdit(...args);
+  };
+
+  const addSidekickListeners = (sk) => {
+    sk.addEventListener('custom:quick-edit', loadQuickEdit);
+  };
+
+  const sk = document.querySelector('aem-sidekick');
+  if (sk) {
+    addSidekickListeners(sk);
+  } else {
+    document.addEventListener('sidekick-ready', () => {
+      addSidekickListeners(document.querySelector('aem-sidekick'));
+    }, { once: true });
+  }
+
+  (() => {
+    const hasQE = new URL(window.location.href).searchParams.has('quick-edit');
+    if (hasQE) import('../tools/quick-edit/quick-edit.js').then((mod) => mod.default());
+  })();
 }
 
 /**
@@ -325,7 +349,7 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
-async function loadPage() {
+export async function loadPage() {
   window.wbgData ||= {};
   await loadEager(document);
   await loadLazy(document);

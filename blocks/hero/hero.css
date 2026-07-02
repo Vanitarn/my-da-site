@@ -115,6 +115,13 @@
     }
   }
 
+  &.center {
+    .hero-foreground {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
   &.stack {
     .hero-background {
       > div {
@@ -143,13 +150,6 @@
       img {
         object-position: 20% 50%;
       }
-    }
-  }
-
-  &.center {
-    .hero-foreground {
-      justify-content: center;
-      text-align: center;
     }
   }
 }

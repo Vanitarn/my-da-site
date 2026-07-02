@@ -1,8 +1,14 @@
-function setBackgroundFocus(img) {
+function applyFocalPoint(img) {
   const x = img.dataset.focalX;
   const y = img.dataset.focalY;
   if (!x || !y) return;
   img.style.objectPosition = `${x}% ${y}%`;
+}
+
+function setBackgroundFocus(img) {
+  applyFocalPoint(img);
+  const observer = new MutationObserver(() => applyFocalPoint(img));
+  observer.observe(img, { attributes: true, attributeFilter: ['data-focal-x', 'data-focal-y'] });
 }
 
 function decorateBackground(bg) {

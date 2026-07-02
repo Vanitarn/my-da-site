@@ -1,8 +1,7 @@
 function setBackgroundFocus(img) {
-  const { title } = img.dataset;
-  if (!title?.includes('data-focal')) return;
-  delete img.dataset.title;
-  const [x, y] = title.split(':')[1].split(',');
+  const x = img.dataset.focalX;
+  const y = img.dataset.focalY;
+  if (!x || !y) return;
   img.style.objectPosition = `${x}% ${y}%`;
 }
 

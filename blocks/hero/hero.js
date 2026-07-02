@@ -1,14 +1,22 @@
 function applyFocalPoint(img) {
-  const x = img.dataset.focalX;
-  const y = img.dataset.focalY;
+  // Editor DOM exposes data-focal-x/y; published page only has title="data-focal:x,y"
+  let x = img.dataset.focalX;
+  let y = img.dataset.focalY;
+  if (!x || !y) {
+    const t = img.getAttribute('title');
+    if (t?.includes('data-focal:')) {
+      [x, y] = t.split('data-focal:')[1].split(',');
+    }
+  }
   if (!x || !y) return;
-  img.style.objectPosition = `${x}% ${y}%`;
+  img.style.objectPosition = `${x.trim()}% ${y.trim()}%`;
+  if (img.getAttribute('title')?.includes('data-focal:')) img.removeAttribute('title');
 }
 
 function setBackgroundFocus(img) {
   applyFocalPoint(img);
   const observer = new MutationObserver(() => applyFocalPoint(img));
-  observer.observe(img, { attributes: true, attributeFilter: ['data-focal-x', 'data-focal-y'] });
+  observer.observe(img, { attributes: true, attributeFilter: ['data-focal-x', 'data-focal-y', 'title'] });
 }
 
 function decorateBackground(bg) {

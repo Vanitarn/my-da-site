@@ -9,7 +9,7 @@ function applyFocalPoint(img) {
     }
   }
   if (!x || !y) return;
-  img.style.objectPosition = `${x.trim()}% ${y.trim()}%`;
+  img.closest('.hero').style.setProperty('--focal', `${x.trim()}% ${y.trim()}%`);
   if (img.getAttribute('title')?.includes('data-focal:')) img.removeAttribute('title');
 }
 

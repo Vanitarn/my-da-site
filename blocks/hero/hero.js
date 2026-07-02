@@ -1,3 +1,15 @@
+function setFocalPoint(block) {
+  const img = block.querySelector('picture img');
+  if (!img) return;
+  const { title } = img.dataset;
+  if (!title?.includes('data-focal')) return;
+  delete img.dataset.title;
+  const parts = title.split(':')[1]?.split(',');
+  if (!parts || parts.length < 2) return;
+  const [x, y] = parts;
+  img.style.objectPosition = `${x}% ${y}%`;
+}
+
 export default function decorate(block) {
   // Get the enable underline setting from the block content (3rd div)
   const enableUnderline = block.querySelector(':scope div:nth-child(3) > div')?.textContent?.trim() || 'true';
@@ -57,4 +69,6 @@ export default function decorate(block) {
   if (backgroundStyleDiv) {
     backgroundStyleDiv.style.display = 'none';
   }
+
+  setFocalPoint(block);
 }

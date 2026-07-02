@@ -32,8 +32,7 @@ function decorateBackground(bg) {
 }
 
 function decorateForeground(fg) {
-  const { children } = fg;
-  for (const [idx, child] of [...children].entries()) {
+  [...fg.children].forEach((child, idx) => {
     const heading = child.querySelector('h1, h2, h3, h4, h5, h6');
     const text = heading || child.querySelector('p, a, ul');
     if (heading) {
@@ -52,7 +51,7 @@ function decorateForeground(fg) {
         child.closest('.hero').classList.add('hero-text-end');
       }
     }
-  }
+  });
 }
 
 export default async function init(el) {

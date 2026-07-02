@@ -1,22 +1,7 @@
-function applyFocalPoint(img) {
-  // Editor DOM exposes data-focal-x/y; published page only has title="data-focal:x,y"
-  let x = img.dataset.focalX;
-  let y = img.dataset.focalY;
-  if (!x || !y) {
-    const t = img.getAttribute('title');
-    if (t?.includes('data-focal:')) {
-      [x, y] = t.split('data-focal:')[1].split(',');
-    }
-  }
-  if (!x || !y) return;
-  img.closest('.hero').style.setProperty('--focal', `${x.trim()}% ${y.trim()}%`);
-  if (img.getAttribute('title')?.includes('data-focal:')) img.removeAttribute('title');
-}
+import { applyFocalPoint } from '../../scripts/utils.js';
 
 function setBackgroundFocus(img) {
   applyFocalPoint(img);
-  const observer = new MutationObserver(() => applyFocalPoint(img));
-  observer.observe(img, { attributes: true, attributeFilter: ['data-focal-x', 'data-focal-y', 'title'] });
 }
 
 function decorateBackground(bg) {

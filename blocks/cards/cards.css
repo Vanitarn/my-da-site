@@ -23,6 +23,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  object-position: var(--focal, 50% 50%);
   min-height: 255px;
   max-height: 255px;
   overflow: hidden;

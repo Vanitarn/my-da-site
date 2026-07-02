@@ -257,3 +257,36 @@ export function dynamicMediaAssetProcess(pictureElement, qParam) {
     });
   }
 }
+
+/**
+ * Reads focal point coordinates from an img element (or its wrapping <a>) and sets
+ * --focal on the nearest ancestor matching rootSelector.
+ * Supports data-focal-x/y (DA editor) and title="data-focal:x,y" (published page).
+ * Sets up a MutationObserver so DA live-preview changes are reflected instantly.
+ * @param {HTMLImageElement} img
+ * @param {string} [rootSelector='.hero'] - selector for the element to receive --focal
+ */
+export function applyFocalPoint(img, rootSelector = '.hero') {
+  const apply = () => {
+    let x = img.dataset.focalX;
+    let y = img.dataset.focalY;
+    if (!x || !y) {
+      const link = img.closest('a');
+      const t = img.getAttribute('title') ?? link?.getAttribute('title');
+      if (t?.includes('data-focal:')) {
+        [x, y] = t.split('data-focal:')[1].split(',');
+      }
+    }
+    if (!x || !y) return;
+    img.closest(rootSelector)?.style.setProperty('--focal', `${x.trim()}% ${y.trim()}%`);
+    if (img.getAttribute('title')?.includes('data-focal:')) img.removeAttribute('title');
+    const link = img.closest('a');
+    if (link?.getAttribute('title')?.includes('data-focal:')) link.removeAttribute('title');
+  };
+
+  apply();
+  const observer = new MutationObserver(apply);
+  observer.observe(img, { attributes: true, attributeFilter: ['data-focal-x', 'data-focal-y', 'title'] });
+  const link = img.closest('a');
+  if (link) observer.observe(link, { attributes: true, attributeFilter: ['title'] });
+}

@@ -8,6 +8,7 @@ export default async function decorate(block) {
 
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { applyFocalPoint } from '../../scripts/utils.js';
 
 export default function decorate(block) {
   const ul = document.createElement('ul');
@@ -64,6 +65,7 @@ export default function decorate(block) {
     ul.append(li);
   });
   ul.querySelectorAll('picture > img').forEach((img) => {
+    applyFocalPoint(img, 'li'); // set --focal on li before img is replaced
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);

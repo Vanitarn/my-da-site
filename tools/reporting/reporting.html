@@ -457,11 +457,6 @@
   let sortCol = 'lastModified';
   let sortAsc = false;
 
-  /* ── HTML escape (prevents XSS when interpolating into innerHTML) ── */
-  function esc(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
   /* ── Formatting ── */
   function fmtDate(iso) {
     if (!iso) return '—';
@@ -495,14 +490,14 @@
     }
     tbody.innerHTML = filtered.map(p => `
       <tr>
-        <td class="path-cell" title="${esc(p.path)}">${esc(p.path)}</td>
+        <td class="path-cell" title="${p.path}">${p.path}</td>
         <td>${badge(p.status)}</td>
-        <td class="muted">${esc(p.author) || '—'}</td>
+        <td class="muted">${p.author || '—'}</td>
         <td class="muted">${fmtDate(p.publishedDate)}</td>
         <td class="muted">${fmtDate(p.previewDate)}</td>
         <td class="muted">${fmtDate(p.lastModified)}</td>
         <td>
-          <a class="action-link" href="https://da.live/edit#/${esc(org)}/${esc(site)}${esc(p.path)}" target="_blank" rel="noopener" title="Open in DA.live">
+          <a class="action-link" href="https://da.live/edit#/${org}/${site}${p.path}.html" target="_blank" rel="noopener" title="Open in DA.live">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </a>
         </td>
@@ -559,6 +554,54 @@
   }
 
   /* ── Fetch from DA.live Admin API ── */
+  /* ── Recursively walk the DA tree, collecting every .html page ── */
+  function isFolder(item) {
+    const name = item.name || (item.path || '').split('/').pop() || '';
+    const ext  = item.ext || (name.includes('.') ? name.split('.').pop() : '');
+    return !ext;                       // no extension → folder
+  }
+  function pageExt(item) {
+    const name = item.name || (item.path || '').split('/').pop() || '';
+    return item.ext || (name.includes('.') ? name.split('.').pop() : '');
+  }
+
+  async function collectPages(org, site, path, headers, acc, depth) {
+    if (depth > 12) return;            // safety cap on recursion depth
+    const listUrl = `https://admin.da.live/list/${org}/${site}${path}`;
+    console.log(`[scan depth ${depth}] listing: ${path}`);
+    let res;
+    try { res = await fetch(listUrl, { headers }); }
+    catch (e) { console.warn(`[scan] fetch failed for ${path}:`, e); return; }
+    if (!res.ok) {
+      console.warn(`[scan] ${path} returned HTTP ${res.status}`);
+      if (depth === 0 && acc.length === 0 && res.status === 401)
+        throw new Error(`HTTP 401 — Unauthorized`);
+      return;
+    }
+    const data  = await res.json();
+    const items = (data.data || data || []);
+    console.log(`[scan] ${path} → ${items.length} items:`, items.map(i => i.path || i.name));
+
+    const folders = [];
+    for (const item of items) {
+      if (isFolder(item)) {
+        folders.push(item);
+      } else if (pageExt(item) === 'html') {
+        acc.push(item);                // real page → collect
+      }
+      // .json and other files are ignored
+    }
+
+    if (folders.length) console.log(`[scan] ${path} → recursing into ${folders.length} folders:`, folders.map(f => f.path || f.name));
+    setStatus(`Scanning… found ${acc.length} pages so far`, true);
+
+    // Recurse into each subfolder (in parallel).
+    await Promise.all(folders.map(f => {
+      const childPath = f.path || (path.replace(/\/$/, '') + '/' + (f.name || ''));
+      return collectPages(org, site, childPath, headers, acc, depth + 1);
+    }));
+  }
+
   async function fetchPages() {
     const org   = document.getElementById('orgInput').value.trim();
     const site  = document.getElementById('siteInput').value.trim();
@@ -569,38 +612,52 @@
 
     setStatus('Fetching pages…', true);
 
-    const headers = {};
+    const headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-      const listUrl = `https://admin.da.live/list/${org}/${site}${path.startsWith('/') ? path : '/' + path}`;
-      const res = await fetch(listUrl, { headers });
-      if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+      const rootPath = path.startsWith('/') ? path : '/' + path;
 
-      const data = await res.json();
-      const items = (data.data || data || []);
+      // Walk the whole tree, including nested folders.
+      const pageItems = [];
+      await collectPages(org, site, rootPath, headers, pageItems, 0);
 
-      if (!items.length) { setStatus('No pages found at that path. Try a different root path.'); return; }
+      if (!pageItems.length) { setStatus('No pages found under that path.'); return; }
 
-      // Fetch status for each page (cap at 200 to avoid rate limiting)
-      const pages = (await Promise.all(items.slice(0, 200).map(async item => {
-        const p = item.path || item.name || '';
-        if (!p) return null;
+      setStatus(`Found ${pageItems.length} pages, checking status…`, true);
+
+      let loggedOnce = false;
+
+      // Fetch status for each page (cap at 500 to avoid rate limiting).
+      const pages = await Promise.all(pageItems.slice(0, 500).map(async item => {
+        // DA list paths include the /{org}/{site} prefix and a .html extension.
+        // The AEM resource path is relative to the site root, so strip both.
+        const daPath = item.path || '';
+        const prefix = `/${org}/${site}`;
+        let resPath = daPath.startsWith(prefix) ? daPath.slice(prefix.length) : daPath;
+        resPath = resPath.replace(/\.html$/, '');
+        if (!resPath.startsWith('/')) resPath = '/' + resPath;
+
         let pub = null, prev = null, mod = item.lastModified || null, author = item.author || null;
+
+        // AEM admin API is the source of truth for preview (page) and live (publish) state.
         try {
-          const sr = await fetch(`https://admin.da.live/status/${org}/${site}${p}`, { headers });
-          if (sr.ok) {
-            const sd = await sr.json();
-            pub    = sd.live?.lastModified    || sd.publish?.date   || null;
-            prev   = sd.preview?.lastModified || sd.preview?.date   || null;
-            mod    = sd.edit?.lastModified    || mod;
-            author = sd.edit?.users?.[0]?.email || sd.preview?.users?.[0]?.email || author;
+          const aemUrl = `https://admin.hlx.page/status/${org}/${site}/main${resPath}`;
+          const ar = await fetch(aemUrl, { headers });
+          if (ar.ok) {
+            const ad = await ar.json();
+            if (!loggedOnce) { console.log('AEM status sample:', JSON.stringify(ad, null, 2)); loggedOnce = true; }
+            if (ad.preview && ad.preview.status === 200) prev = ad.preview.lastModified || prev;
+            if (ad.live    && ad.live.status    === 200) pub  = ad.live.lastModified    || pub;
+            mod    = ad.edit?.lastModified || ad.source?.lastModified || mod;
+            author = ad.edit?.lastModifiedBy || ad.profile?.email || author;
           }
-        } catch (_) { /* status call failed — use list data */ }
-        const pg = { path: p, lastModified: mod, publishedDate: pub, previewDate: prev, author };
+        } catch (_) { /* AEM status failed — fall through to DA edit state */ }
+
+        const pg = { path: resPath, fullPath: daPath, lastModified: mod, publishedDate: pub, previewDate: prev, author };
         pg.status = deriveStatus(pg);
         return pg;
-      }))).filter(Boolean);
+      }));
 
       allPages = pages;
       filtered = [...pages];
@@ -657,16 +714,13 @@
       .map(r => r.map(c => `"${(c || '').replace(/"/g, '""')}"`).join(','))
       .join('\n');
     const a = document.createElement('a');
-    const blobUrl = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.href = blobUrl;
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a.download = `${org}-${site}-report-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
-    URL.revokeObjectURL(blobUrl);
   }
 
   /* ── DA SDK: auto-fill org/site if opened inside DA.live ── */
   window.addEventListener('message', e => {
-    if (e.origin !== 'https://da.live') return;
     if (e.data?.details?.org)  document.getElementById('orgInput').value  = e.data.details.org;
     if (e.data?.details?.site) document.getElementById('siteInput').value = e.data.details.site;
   });

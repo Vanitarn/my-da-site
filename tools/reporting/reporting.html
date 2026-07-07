@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DA.live Page Reporter</title>
   <link rel="icon" href="data:,">
-  <!-- DA App SDK (handles PostMessage with DA.live shell) -->
+  <!-- DA App SDK: provides the logged-in user's token + org/site context -->
   <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -381,7 +381,7 @@
         <input id="pathInput" placeholder="e.g. /en" value="/" autocomplete="off" />
       </div>
       <div class="field">
-        <label for="tokenInput">Bearer token <span style="font-weight:400;color:var(--text-3)">(if required)</span></label>
+        <label for="tokenInput">Bearer token <span style="font-weight:400;color:var(--text-3)">(only if not signed in)</span></label>
         <input id="tokenInput" type="password" placeholder="••••••••••••" autocomplete="off" />
       </div>
     </div>
@@ -610,7 +610,8 @@
     const org   = document.getElementById('orgInput').value.trim();
     const site  = document.getElementById('siteInput').value.trim();
     const path  = document.getElementById('pathInput').value.trim() || '/';
-    const token = document.getElementById('tokenInput').value.trim();
+    // Prefer the logged-in DA.live session token; fall back to the manual field.
+    const token = (window.__DA && window.__DA.token) || document.getElementById('tokenInput').value.trim();
 
     if (!org || !site) { setStatus('Enter org and site name first.'); return; }
 
@@ -720,11 +721,44 @@
     a.click();
   }
 
-  /* ── DA SDK: auto-fill org/site if opened inside DA.live ── */
-  window.addEventListener('message', e => {
-    if (e.data?.details?.org)  document.getElementById('orgInput').value  = e.data.details.org;
-    if (e.data?.details?.site) document.getElementById('siteInput').value = e.data.details.site;
-  });
+  /* ── DA SDK integration ──
+     When running inside DA.live, the SDK provides the logged-in user's
+     IMS token and the org/site context, so no manual entry is needed. */
+  window.__DA = { token: null, context: null };
+
 </script>
+
+<!-- DA SDK: pull the logged-in user's token + context, then auto-fill and fetch -->
+<script type="module">
+  import DA_SDK from 'https://da.live/nx/utils/sdk.js';
+
+  (async function initDA() {
+    try {
+      const { context, token } = await DA_SDK;   // resolves only inside the DA shell
+      if (token) window.__DA.token = token;
+      if (context) {
+        window.__DA.context = context;
+        // DA context exposes org and repo/site for the current site.
+        const org  = context.org  || context.owner;
+        const site = context.repo || context.site;
+        if (org)  document.getElementById('orgInput').value  = org;
+        if (site) document.getElementById('siteInput').value = site;
+
+        // Signed in via SSO — the manual token field is no longer needed.
+        const tokenField = document.getElementById('tokenInput')?.closest('.field');
+        if (tokenField) tokenField.style.display = 'none';
+
+        // If we have everything, run the report immediately.
+        if (org && site && typeof window.fetchPages === 'function') {
+          window.fetchPages();
+        }
+      }
+    } catch (e) {
+      // Not running inside DA.live (e.g. opened as a raw file) — the manual
+      // fields stay visible and the user enters org/site (and a token if needed).
+    }
+  })();
+</script>
+
 </body>
 </html>

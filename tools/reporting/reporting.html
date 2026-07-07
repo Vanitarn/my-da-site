@@ -380,7 +380,7 @@
         <label for="pathInput">Root path <span style="font-weight:400;color:var(--text-3)">(optional)</span></label>
         <input id="pathInput" placeholder="e.g. /en" value="/" autocomplete="off" />
       </div>
-      <div class="field">
+      <div class="field" id="tokenField" style="display:none">
         <label for="tokenInput">Bearer token <span style="font-weight:400;color:var(--text-3)">(only if not signed in)</span></label>
         <input id="tokenInput" type="password" placeholder="••••••••••••" autocomplete="off" />
       </div>
@@ -733,11 +733,10 @@
   import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 
   (async function initDA() {
+    const tokenField = document.getElementById('tokenField');
     try {
       const sdk = await DA_SDK;   // resolves only inside the DA shell
-      console.log('[DA SDK] resolved:', sdk);
       const { context, token } = sdk;
-      console.log('[DA SDK] token present?', !!token, '| context:', context);
       if (token) window.__DA.token = token;
       if (context) {
         window.__DA.context = context;
@@ -746,20 +745,15 @@
         const site = context.repo || context.site;
         if (org)  document.getElementById('orgInput').value  = org;
         if (site) document.getElementById('siteInput').value = site;
-
-        // Signed in via SSO — the manual token field is no longer needed.
-        const tokenField = document.getElementById('tokenInput')?.closest('.field');
-        if (tokenField && token) tokenField.style.display = 'none';
-
-        // If we have everything, run the report immediately.
-        if (org && site && typeof window.fetchPages === 'function') {
-          window.fetchPages();
-        }
+        // Org/site and token are ready — the user clicks "Fetch pages" to run.
+        if (token) return;
       }
+      // Signed in but no token — reveal the manual field as a fallback.
+      if (!token && tokenField) tokenField.style.display = '';
     } catch (e) {
-      console.warn('[DA SDK] failed to init (running outside DA.live?):', e);
-      // Not running inside DA.live (e.g. opened as a raw file) — the manual
-      // fields stay visible and the user enters org/site (and a token if needed).
+      // Running outside the DA.live shell (e.g. opened as a raw file):
+      // reveal the manual token field so the user can authenticate.
+      if (tokenField) tokenField.style.display = '';
     }
   })();
 </script>

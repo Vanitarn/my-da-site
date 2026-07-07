@@ -7,6 +7,8 @@
   <link rel="icon" href="data:,">
   <!-- DA App SDK: provides the logged-in user's token + org/site context -->
   <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
+  <!-- SheetJS for .xlsx export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -274,7 +276,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px;
+      min-width: 820px;
     }
     thead th {
       font-size: 11px;
@@ -424,7 +426,11 @@
         <option value="unpublished">Unpublished</option>
       </select>
       <span class="row-count" id="rowCount"></span>
-      <button class="btn btn-success" onclick="exportCSV()">
+      <button class="btn btn-success" onclick="exportExcel()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Excel
+      </button>
+      <button class="btn" onclick="exportCSV()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export CSV
       </button>
@@ -435,12 +441,13 @@
       <table>
         <thead>
           <tr>
-            <th class="sortable" onclick="sortBy('path')" style="width:30%">Page path <span class="sort-arrow" id="arr-path"></span></th>
-            <th class="sortable" onclick="sortBy('status')" style="width:12%">Status <span class="sort-arrow" id="arr-status"></span></th>
-            <th class="sortable" onclick="sortBy('author')" style="width:13%">Author <span class="sort-arrow" id="arr-author"></span></th>
-            <th class="sortable" onclick="sortBy('publishedDate')" style="width:14%">Published <span class="sort-arrow" id="arr-publishedDate"></span></th>
-            <th class="sortable" onclick="sortBy('previewDate')" style="width:14%">Previewed <span class="sort-arrow" id="arr-previewDate"></span></th>
-            <th class="sortable" onclick="sortBy('lastModified')" style="width:14%">Last modified <span class="sort-arrow" id="arr-lastModified"></span></th>
+            <th class="sortable" onclick="sortBy('path')" style="width:26%">Page path <span class="sort-arrow" id="arr-path"></span></th>
+            <th class="sortable" onclick="sortBy('status')" style="width:11%">Status <span class="sort-arrow" id="arr-status"></span></th>
+            <th class="sortable" onclick="sortBy('previewedBy')" style="width:13%">Previewed by <span class="sort-arrow" id="arr-previewedBy"></span></th>
+            <th class="sortable" onclick="sortBy('publishedBy')" style="width:13%">Published by <span class="sort-arrow" id="arr-publishedBy"></span></th>
+            <th class="sortable" onclick="sortBy('previewDate')" style="width:13%">Previewed <span class="sort-arrow" id="arr-previewDate"></span></th>
+            <th class="sortable" onclick="sortBy('publishedDate')" style="width:13%">Published <span class="sort-arrow" id="arr-publishedDate"></span></th>
+            <th class="sortable" onclick="sortBy('lastModified')" style="width:13%">Last modified <span class="sort-arrow" id="arr-lastModified"></span></th>
             <th style="width:3%"></th>
           </tr>
         </thead>
@@ -485,16 +492,17 @@
     const org  = document.getElementById('orgInput').value.trim() || 'org';
     const site = document.getElementById('siteInput').value.trim() || 'site';
     if (!filtered.length) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No pages match your filters</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No pages match your filters</td></tr>';
       return;
     }
     tbody.innerHTML = filtered.map(p => `
       <tr>
         <td class="path-cell" title="${p.path}">${p.path}</td>
         <td>${badge(p.status)}</td>
-        <td class="muted">${p.author || '—'}</td>
-        <td class="muted">${fmtDate(p.publishedDate)}</td>
+        <td class="muted">${p.previewedBy || '—'}</td>
+        <td class="muted">${p.publishedBy || '—'}</td>
         <td class="muted">${fmtDate(p.previewDate)}</td>
+        <td class="muted">${fmtDate(p.publishedDate)}</td>
         <td class="muted">${fmtDate(p.lastModified)}</td>
         <td>
           <a class="action-link" href="https://da.live/edit#/${org}/${site}${p.path}.html" target="_blank" rel="noopener" title="Open in DA.live">
@@ -641,7 +649,8 @@
         resPath = resPath.replace(/\.html$/, '');
         if (!resPath.startsWith('/')) resPath = '/' + resPath;
 
-        let pub = null, prev = null, mod = item.lastModified || null, author = item.author || null;
+        let pub = null, prev = null, mod = item.lastModified || null;
+        let pubBy = null, prevBy = null;
 
         // AEM admin API is the source of truth for preview (page) and live (publish) state.
         try {
@@ -649,14 +658,19 @@
           const ar = await fetch(aemUrl, { headers });
           if (ar.ok) {
             const ad = await ar.json();
-            if (ad.preview && ad.preview.status === 200) prev = ad.preview.lastModified || prev;
-            if (ad.live    && ad.live.status    === 200) pub  = ad.live.lastModified    || pub;
-            mod    = ad.edit?.lastModified || ad.preview?.sourceLastModified || mod;
-            author = ad.live?.lastModifiedBy || ad.preview?.lastModifiedBy || ad.edit?.lastModifiedBy || ad.profile?.email || author;
+            if (ad.preview && ad.preview.status === 200) {
+              prev   = ad.preview.lastModified   || prev;
+              prevBy = ad.preview.lastModifiedBy || prevBy;
+            }
+            if (ad.live && ad.live.status === 200) {
+              pub   = ad.live.lastModified   || pub;
+              pubBy = ad.live.lastModifiedBy || pubBy;
+            }
+            mod = ad.edit?.lastModified || ad.preview?.sourceLastModified || mod;
           }
         } catch (_) { /* AEM status failed — fall through to DA edit state */ }
 
-        const pg = { path: resPath, fullPath: daPath, lastModified: mod, publishedDate: pub, previewDate: prev, author };
+        const pg = { path: resPath, fullPath: daPath, lastModified: mod, publishedDate: pub, previewDate: prev, previewedBy: prevBy, publishedBy: pubBy };
         pg.status = deriveStatus(pg);
         return pg;
       }));
@@ -704,21 +718,48 @@
     document.getElementById('reportSection').style.display = 'block';
   }
 
-  /* ── Export CSV ── */
+  /* ── CSV-safe date (blank instead of em-dash) ── */
+  function csvDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function reportRows() {
+    const headers = ['Path', 'Status', 'Previewed by', 'Published by', 'Preview date', 'Published date', 'Last modified'];
+    const rows = filtered.map(p => [
+      p.path, p.status, p.previewedBy || '', p.publishedBy || '',
+      csvDate(p.previewDate), csvDate(p.publishedDate), csvDate(p.lastModified)
+    ]);
+    return { headers, rows };
+  }
+
+  /* ── Export CSV (UTF-8 BOM so Excel renders characters correctly) ── */
   function exportCSV() {
     const org  = document.getElementById('orgInput').value.trim() || 'site';
     const site = document.getElementById('siteInput').value.trim() || '';
-    const headers = ['Path', 'Status', 'Author', 'Published date', 'Preview date', 'Last modified'];
-    const rows = filtered.map(p => [
-      p.path, p.status, p.author || '', fmtDate(p.publishedDate), fmtDate(p.previewDate), fmtDate(p.lastModified)
-    ]);
+    const { headers, rows } = reportRows();
     const csv = [headers, ...rows]
       .map(r => r.map(c => `"${(c || '').replace(/"/g, '""')}"`).join(','))
-      .join('\n');
+      .join('\r\n');
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
     a.download = `${org}-${site}-report-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
+  }
+
+  /* ── Export Excel (.xlsx) via SheetJS ── */
+  function exportExcel() {
+    const org  = document.getElementById('orgInput').value.trim() || 'site';
+    const site = document.getElementById('siteInput').value.trim() || '';
+    const { headers, rows } = reportRows();
+    if (typeof XLSX === 'undefined') { exportCSV(); return; }  // fallback if lib not loaded
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    ws['!cols'] = [ { wch: 48 }, { wch: 13 }, { wch: 26 }, { wch: 26 }, { wch: 20 }, { wch: 20 }, { wch: 20 } ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Page report');
+    XLSX.writeFile(wb, `${org}-${site}-report-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }
 
   /* ── DA SDK integration ──

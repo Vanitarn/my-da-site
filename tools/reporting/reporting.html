@@ -734,7 +734,10 @@
 
   (async function initDA() {
     try {
-      const { context, token } = await DA_SDK;   // resolves only inside the DA shell
+      const sdk = await DA_SDK;   // resolves only inside the DA shell
+      console.log('[DA SDK] resolved:', sdk);
+      const { context, token } = sdk;
+      console.log('[DA SDK] token present?', !!token, '| context:', context);
       if (token) window.__DA.token = token;
       if (context) {
         window.__DA.context = context;
@@ -746,7 +749,7 @@
 
         // Signed in via SSO — the manual token field is no longer needed.
         const tokenField = document.getElementById('tokenInput')?.closest('.field');
-        if (tokenField) tokenField.style.display = 'none';
+        if (tokenField && token) tokenField.style.display = 'none';
 
         // If we have everything, run the report immediately.
         if (org && site && typeof window.fetchPages === 'function') {
@@ -754,6 +757,7 @@
         }
       }
     } catch (e) {
+      console.warn('[DA SDK] failed to init (running outside DA.live?):', e);
       // Not running inside DA.live (e.g. opened as a raw file) — the manual
       // fields stay visible and the user enters org/site (and a token if needed).
     }

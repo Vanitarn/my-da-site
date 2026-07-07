@@ -567,20 +567,20 @@
 
   async function collectPages(org, site, path, headers, acc, depth) {
     if (depth > 12) return;            // safety cap on recursion depth
-    const listUrl = `https://admin.da.live/list/${org}/${site}${path}`;
-    console.log(`[scan depth ${depth}] listing: ${path}`);
+    // DA's list endpoint returns a folder's children only when the path ends in a slash.
+    const listPath = path.endsWith('/') ? path : path + '/';
+    const listUrl = `https://admin.da.live/list/${org}/${site}${listPath}`;
     let res;
     try { res = await fetch(listUrl, { headers }); }
-    catch (e) { console.warn(`[scan] fetch failed for ${path}:`, e); return; }
+    catch (_) { return; }
     if (!res.ok) {
-      console.warn(`[scan] ${path} returned HTTP ${res.status}`);
       if (depth === 0 && acc.length === 0 && res.status === 401)
         throw new Error(`HTTP 401 — Unauthorized`);
       return;
     }
     const data  = await res.json();
     const items = (data.data || data || []);
-    console.log(`[scan] ${path} → ${items.length} items:`, items.map(i => i.path || i.name));
+    console.log(`[scan] ${listPath} → ${items.length} items`, items.map(i => i.path || i.name));
 
     const folders = [];
     for (const item of items) {
@@ -592,12 +592,16 @@
       // .json and other files are ignored
     }
 
-    if (folders.length) console.log(`[scan] ${path} → recursing into ${folders.length} folders:`, folders.map(f => f.path || f.name));
     setStatus(`Scanning… found ${acc.length} pages so far`, true);
 
     // Recurse into each subfolder (in parallel).
+    // DA returns folder paths WITH the /{org}/{site} prefix already baked in,
+    // but the list URL also adds /{org}/{site} — so strip the prefix to avoid duplication.
+    const prefix = `/${org}/${site}`;
     await Promise.all(folders.map(f => {
-      const childPath = f.path || (path.replace(/\/$/, '') + '/' + (f.name || ''));
+      let childPath = f.path || (path.replace(/\/$/, '') + '/' + (f.name || ''));
+      if (childPath.startsWith(prefix)) childPath = childPath.slice(prefix.length);
+      if (!childPath.startsWith('/')) childPath = '/' + childPath;
       return collectPages(org, site, childPath, headers, acc, depth + 1);
     }));
   }
@@ -626,8 +630,6 @@
 
       setStatus(`Found ${pageItems.length} pages, checking status…`, true);
 
-      let loggedOnce = false;
-
       // Fetch status for each page (cap at 500 to avoid rate limiting).
       const pages = await Promise.all(pageItems.slice(0, 500).map(async item => {
         // DA list paths include the /{org}/{site} prefix and a .html extension.
@@ -646,11 +648,10 @@
           const ar = await fetch(aemUrl, { headers });
           if (ar.ok) {
             const ad = await ar.json();
-            if (!loggedOnce) { console.log('AEM status sample:', JSON.stringify(ad, null, 2)); loggedOnce = true; }
             if (ad.preview && ad.preview.status === 200) prev = ad.preview.lastModified || prev;
             if (ad.live    && ad.live.status    === 200) pub  = ad.live.lastModified    || pub;
-            mod    = ad.edit?.lastModified || ad.source?.lastModified || mod;
-            author = ad.edit?.lastModifiedBy || ad.profile?.email || author;
+            mod    = ad.edit?.lastModified || ad.preview?.sourceLastModified || mod;
+            author = ad.live?.lastModifiedBy || ad.preview?.lastModifiedBy || ad.edit?.lastModifiedBy || ad.profile?.email || author;
           }
         } catch (_) { /* AEM status failed — fall through to DA edit state */ }
 

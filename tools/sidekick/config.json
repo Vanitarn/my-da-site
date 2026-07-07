@@ -43,6 +43,11 @@
       "image": "https://main--da-block-collection--aemsites.hlx.page/media_1061934561e8a4f01907e616a0ce0e4b74d63b92e.jpeg",
       "description": "Manage your tags",
       "url": "https://da.live/app/aemsites/da-block-collection/tools/tags"
-    }
+    },
+    {
+    "title": "Page reporter",
+    "description": "Track publish, preview, and draft status across your site.",
+    "url": "https://da.live/app/vanitarn/my-da-site/tools/reporting"
+  }
   ]
 }

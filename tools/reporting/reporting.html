@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DA.live Page Reporter</title>
+  <link rel="icon" href="data:,">
+  <!-- DA App SDK (handles PostMessage with DA.live shell) -->
+  <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f9f8;
+      --surface: #ffffff;
+      --surface-alt: #f4f4f2;
+      --border: #e5e5e3;
+      --border-strong: #d0d0cc;
+      --text: #1a1a18;
+      --text-2: #5a5a56;
+      --text-3: #9a9a94;
+      --accent: #1a6ef5;
+      --accent-bg: #eff5ff;
+      --accent-text: #1249b0;
+      --success: #1a9e5c;
+      --success-bg: #edfaf3;
+      --success-text: #0f6b3d;
+      --warn: #d97706;
+      --warn-bg: #fffbeb;
+      --warn-text: #92500a;
+      --danger: #dc2626;
+      --danger-bg: #fff0f0;
+      --danger-text: #991b1b;
+      --muted-bg: #f4f4f2;
+      --muted-text: #6b6b66;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a18;
+        --surface: #242422;
+        --surface-alt: #2e2e2c;
+        --border: #3a3a38;
+        --border-strong: #4a4a48;
+        --text: #f0f0ee;
+        --text-2: #a8a8a4;
+        --text-3: #686864;
+        --accent: #5b9aff;
+        --accent-bg: #0f2040;
+        --accent-text: #90b8ff;
+        --success: #34d27a;
+        --success-bg: #0a2a1a;
+        --success-text: #6ee8a8;
+        --warn: #f59e0b;
+        --warn-bg: #2a1c00;
+        --warn-text: #fbbf24;
+        --danger: #f87171;
+        --danger-bg: #2a0a0a;
+        --danger-text: #fca5a5;
+        --muted-bg: #2e2e2c;
+        --muted-text: #a0a09c;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left h1 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 3px;
+    }
+    .header-left p {
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    /* ── Config card ── */
+    .config-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .config-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-3);
+      margin-bottom: 1rem;
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 540px) { .field-grid { grid-template-columns: 1fr; } }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+    .field input::placeholder { color: var(--text-3); }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; align-items: center; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--surface-alt); }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { opacity: 0.9; background: var(--accent); }
+    .btn-success {
+      color: var(--success-text);
+      border-color: var(--success);
+    }
+    .btn-success:hover { background: var(--success-bg); }
+
+    .status-msg { font-size: 12px; color: var(--text-3); margin-left: 4px; }
+
+    /* ── Spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 13px; height: 13px;
+      border: 2px solid var(--border-strong);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Summary cards ── */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+    }
+    .stat-label { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+    .stat-val { font-size: 22px; font-weight: 600; }
+    .stat-val.c-total  { color: var(--text); }
+    .stat-val.c-pub    { color: var(--success); }
+    .stat-val.c-prev   { color: var(--accent); }
+    .stat-val.c-unpub  { color: var(--danger); }
+    .stat-val.c-draft  { color: var(--warn); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 160px;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 9px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-3);
+      pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 7px 10px 7px 30px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+    select {
+      padding: 7px 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+    .row-count { font-size: 12px; color: var(--text-3); margin-left: auto; white-space: nowrap; }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    thead th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-3);
+      background: var(--surface-alt);
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      user-select: none;
+    }
+    thead th.sortable { cursor: pointer; }
+    thead th.sortable:hover { color: var(--text-2); }
+    .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    .sort-arrow.active { opacity: 1; color: var(--accent); }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-alt); }
+    tbody td { padding: 9px 12px; font-size: 13px; white-space: nowrap; }
+
+    td.path-cell {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11.5px;
+      color: var(--accent-text);
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    td.muted { color: var(--text-2); font-size: 12px; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .badge-published  { background: var(--success-bg); color: var(--success-text); }
+    .badge-preview    { background: var(--accent-bg);  color: var(--accent-text);  }
+    .badge-draft      { background: var(--warn-bg);    color: var(--warn-text);    }
+    .badge-unpublished{ background: var(--muted-bg);   color: var(--muted-text);   }
+
+    /* ── Empty / loading ── */
+    .empty-row td {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+
+    /* ── Action link ── */
+    .action-link {
+      color: var(--text-3);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.12s;
+    }
+    .action-link:hover { color: var(--accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .header { flex-direction: column; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .row-count { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Page reporter</h1>
+      <p>Track publish, preview, and draft status across your DA.live site</p>
+    </div>
+  </div>
+
+  <!-- Config -->
+  <div class="config-card">
+    <div class="config-card-title">Connection</div>
+    <div class="field-grid">
+      <div class="field">
+        <label for="orgInput">Organisation</label>
+        <input id="orgInput" placeholder="e.g. my-org" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="siteInput">Site / repo</label>
+        <input id="siteInput" placeholder="e.g. my-site" autocomplete="off" />
+      </div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label for="pathInput">Root path <span style="font-weight:400;color:var(--text-3)">(optional)</span></label>
+        <input id="pathInput" placeholder="e.g. /en" value="/" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="tokenInput">Bearer token <span style="font-weight:400;color:var(--text-3)">(if required)</span></label>
+        <input id="tokenInput" type="password" placeholder="••••••••••••" autocomplete="off" />
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="fetchPages()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+        Fetch pages
+      </button>
+      <button class="btn" onclick="loadDemo()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Load demo data
+      </button>
+      <span class="status-msg" id="fetchStatus"></span>
+    </div>
+  </div>
+
+  <!-- Report section -->
+  <div id="reportSection" style="display:none">
+
+    <!-- Summary -->
+    <div class="summary">
+      <div class="stat"><div class="stat-label">Total</div><div class="stat-val c-total" id="sTotal">0</div></div>
+      <div class="stat"><div class="stat-label">Published</div><div class="stat-val c-pub" id="sPub">0</div></div>
+      <div class="stat"><div class="stat-label">Preview only</div><div class="stat-val c-prev" id="sPrev">0</div></div>
+      <div class="stat"><div class="stat-label">Draft</div><div class="stat-val c-draft" id="sDraft">0</div></div>
+      <div class="stat"><div class="stat-label">Unpublished</div><div class="stat-val c-unpub" id="sUnpub">0</div></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="searchInput" placeholder="Search page path…" oninput="applyFilters()" />
+      </div>
+      <select id="statusFilter" onchange="applyFilters()" style="width:148px">
+        <option value="">All statuses</option>
+        <option value="published">Published</option>
+        <option value="preview">Preview only</option>
+        <option value="draft">Draft</option>
+        <option value="unpublished">Unpublished</option>
+      </select>
+      <span class="row-count" id="rowCount"></span>
+      <button class="btn btn-success" onclick="exportCSV()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortBy('path')" style="width:30%">Page path <span class="sort-arrow" id="arr-path"></span></th>
+            <th class="sortable" onclick="sortBy('status')" style="width:12%">Status <span class="sort-arrow" id="arr-status"></span></th>
+            <th class="sortable" onclick="sortBy('author')" style="width:13%">Author <span class="sort-arrow" id="arr-author"></span></th>
+            <th class="sortable" onclick="sortBy('publishedDate')" style="width:14%">Published <span class="sort-arrow" id="arr-publishedDate"></span></th>
+            <th class="sortable" onclick="sortBy('previewDate')" style="width:14%">Previewed <span class="sort-arrow" id="arr-previewDate"></span></th>
+            <th class="sortable" onclick="sortBy('lastModified')" style="width:14%">Last modified <span class="sort-arrow" id="arr-lastModified"></span></th>
+            <th style="width:3%"></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let allPages = [];
+  let filtered = [];
+  let sortCol = 'lastModified';
+  let sortAsc = false;
+
+  /* ── HTML escape (prevents XSS when interpolating into innerHTML) ── */
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /* ── Formatting ── */
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  /* ── Status badge ── */
+  const STATUS_LABEL = { published: 'Published', preview: 'Preview only', draft: 'Draft', unpublished: 'Unpublished' };
+  function badge(s) {
+    return `<span class="badge badge-${s}"><span class="badge-dot"></span>${STATUS_LABEL[s] || s}</span>`;
+  }
+
+  /* ── Derive status ── */
+  function deriveStatus(p) {
+    if (p.publishedDate) return 'published';
+    if (p.previewDate)   return 'preview';
+    if (p.lastModified)  return 'draft';
+    return 'unpublished';
+  }
+
+  /* ── Render table ── */
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const org  = document.getElementById('orgInput').value.trim() || 'org';
+    const site = document.getElementById('siteInput').value.trim() || 'site';
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No pages match your filters</td></tr>';
+      return;
+    }
+    tbody.innerHTML = filtered.map(p => `
+      <tr>
+        <td class="path-cell" title="${esc(p.path)}">${esc(p.path)}</td>
+        <td>${badge(p.status)}</td>
+        <td class="muted">${esc(p.author) || '—'}</td>
+        <td class="muted">${fmtDate(p.publishedDate)}</td>
+        <td class="muted">${fmtDate(p.previewDate)}</td>
+        <td class="muted">${fmtDate(p.lastModified)}</td>
+        <td>
+          <a class="action-link" href="https://da.live/edit#/${esc(org)}/${esc(site)}${esc(p.path)}" target="_blank" rel="noopener" title="Open in DA.live">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </td>
+      </tr>`).join('');
+  }
+
+  /* ── Filters ── */
+  function applyFilters() {
+    const q  = (document.getElementById('searchInput').value || '').toLowerCase();
+    const sf = document.getElementById('statusFilter').value;
+    filtered = allPages.filter(p => {
+      if (q  && !p.path.toLowerCase().includes(q)) return false;
+      if (sf && p.status !== sf) return false;
+      return true;
+    });
+    sortFiltered();
+    document.getElementById('rowCount').textContent = `${filtered.length} of ${allPages.length} pages`;
+    renderTable();
+  }
+
+  /* ── Sort ── */
+  function sortBy(col) {
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = true; }
+    document.querySelectorAll('.sort-arrow').forEach(el => { el.textContent = ''; el.classList.remove('active'); });
+    const el = document.getElementById('arr-' + col);
+    if (el) { el.textContent = sortAsc ? '↑' : '↓'; el.classList.add('active'); }
+    sortFiltered();
+    renderTable();
+  }
+
+  function sortFiltered() {
+    filtered.sort((a, b) => {
+      const av = a[sortCol] || '', bv = b[sortCol] || '';
+      if (av < bv) return sortAsc ? -1 : 1;
+      if (av > bv) return sortAsc ?  1 : -1;
+      return 0;
+    });
+  }
+
+  /* ── Summary ── */
+  function updateSummary() {
+    document.getElementById('sTotal').textContent = allPages.length;
+    document.getElementById('sPub').textContent   = allPages.filter(p => p.status === 'published').length;
+    document.getElementById('sPrev').textContent  = allPages.filter(p => p.status === 'preview').length;
+    document.getElementById('sDraft').textContent = allPages.filter(p => p.status === 'draft').length;
+    document.getElementById('sUnpub').textContent = allPages.filter(p => p.status === 'unpublished').length;
+  }
+
+  /* ── Status message ── */
+  function setStatus(msg, loading) {
+    const el = document.getElementById('fetchStatus');
+    el.innerHTML = loading ? `<span class="spinner"></span> ${msg}` : msg;
+  }
+
+  /* ── Fetch from DA.live Admin API ── */
+  async function fetchPages() {
+    const org   = document.getElementById('orgInput').value.trim();
+    const site  = document.getElementById('siteInput').value.trim();
+    const path  = document.getElementById('pathInput').value.trim() || '/';
+    const token = document.getElementById('tokenInput').value.trim();
+
+    if (!org || !site) { setStatus('Enter org and site name first.'); return; }
+
+    setStatus('Fetching pages…', true);
+
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    try {
+      const listUrl = `https://admin.da.live/list/${org}/${site}${path.startsWith('/') ? path : '/' + path}`;
+      const res = await fetch(listUrl, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+
+      const data = await res.json();
+      const items = (data.data || data || []);
+
+      if (!items.length) { setStatus('No pages found at that path. Try a different root path.'); return; }
+
+      // Fetch status for each page (cap at 200 to avoid rate limiting)
+      const pages = (await Promise.all(items.slice(0, 200).map(async item => {
+        const p = item.path || item.name || '';
+        if (!p) return null;
+        let pub = null, prev = null, mod = item.lastModified || null, author = item.author || null;
+        try {
+          const sr = await fetch(`https://admin.da.live/status/${org}/${site}${p}`, { headers });
+          if (sr.ok) {
+            const sd = await sr.json();
+            pub    = sd.live?.lastModified    || sd.publish?.date   || null;
+            prev   = sd.preview?.lastModified || sd.preview?.date   || null;
+            mod    = sd.edit?.lastModified    || mod;
+            author = sd.edit?.users?.[0]?.email || sd.preview?.users?.[0]?.email || author;
+          }
+        } catch (_) { /* status call failed — use list data */ }
+        const pg = { path: p, lastModified: mod, publishedDate: pub, previewDate: prev, author };
+        pg.status = deriveStatus(pg);
+        return pg;
+      }))).filter(Boolean);
+
+      allPages = pages;
+      filtered = [...pages];
+      setStatus(`Loaded ${pages.length} page${pages.length !== 1 ? 's' : ''}`);
+      updateSummary();
+      applyFilters();
+      document.getElementById('reportSection').style.display = 'block';
+
+    } catch (e) {
+      setStatus(`Error: ${e.message}. Check org/site or try demo data.`);
+    }
+  }
+
+  /* ── Demo data ── */
+  function loadDemo() {
+    const now = Date.now();
+    const d = h => new Date(now - h * 3600000).toISOString();
+    allPages = [
+      { path: '/en/index',                 author: 'alice@co.com',  publishedDate: d(2),   previewDate: d(3),   lastModified: d(1)   },
+      { path: '/en/about',                 author: 'bob@co.com',    publishedDate: d(48),  previewDate: d(50),  lastModified: d(48)  },
+      { path: '/en/products/overview',     author: 'alice@co.com',  publishedDate: null,   previewDate: d(5),   lastModified: d(4)   },
+      { path: '/en/products/pro',          author: 'carol@co.com',  publishedDate: null,   previewDate: null,   lastModified: d(10)  },
+      { path: '/en/blog/ai-trends-2025',   author: 'alice@co.com',  publishedDate: d(72),  previewDate: d(74),  lastModified: d(72)  },
+      { path: '/en/blog/product-update',   author: 'bob@co.com',    publishedDate: null,   previewDate: d(12),  lastModified: d(11)  },
+      { path: '/en/contact',               author: 'carol@co.com',  publishedDate: d(200), previewDate: d(202), lastModified: d(200) },
+      { path: '/en/pricing',               author: 'alice@co.com',  publishedDate: null,   previewDate: null,   lastModified: null   },
+      { path: '/en/docs/getting-started',  author: 'dave@co.com',   publishedDate: d(168), previewDate: d(170), lastModified: d(168) },
+      { path: '/en/docs/api-reference',    author: 'dave@co.com',   publishedDate: null,   previewDate: d(20),  lastModified: d(19)  },
+      { path: '/en/legal/privacy',         author: 'carol@co.com',  publishedDate: d(720), previewDate: d(722), lastModified: d(720) },
+      { path: '/en/legal/terms',           author: 'carol@co.com',  publishedDate: null,   previewDate: null,   lastModified: d(50)  },
+      { path: '/en/careers',               author: 'bob@co.com',    publishedDate: d(96),  previewDate: d(98),  lastModified: d(96)  },
+      { path: '/en/news/launch-event',     author: 'alice@co.com',  publishedDate: d(24),  previewDate: d(26),  lastModified: d(24)  },
+      { path: '/en/resources/whitepaper',  author: 'dave@co.com',   publishedDate: null,   previewDate: d(30),  lastModified: d(29)  },
+    ].map(p => { p.status = deriveStatus(p); return p; });
+
+    document.getElementById('orgInput').value  = 'demo-org';
+    document.getElementById('siteInput').value = 'demo-site';
+    filtered = [...allPages];
+    setStatus(`Loaded ${allPages.length} demo pages`);
+    updateSummary();
+    applyFilters();
+    document.getElementById('reportSection').style.display = 'block';
+  }
+
+  /* ── Export CSV ── */
+  function exportCSV() {
+    const org  = document.getElementById('orgInput').value.trim() || 'site';
+    const site = document.getElementById('siteInput').value.trim() || '';
+    const headers = ['Path', 'Status', 'Author', 'Published date', 'Preview date', 'Last modified'];
+    const rows = filtered.map(p => [
+      p.path, p.status, p.author || '', fmtDate(p.publishedDate), fmtDate(p.previewDate), fmtDate(p.lastModified)
+    ]);
+    const csv = [headers, ...rows]
+      .map(r => r.map(c => `"${(c || '').replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const a = document.createElement('a');
+    const blobUrl = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.href = blobUrl;
+    a.download = `${org}-${site}-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  /* ── DA SDK: auto-fill org/site if opened inside DA.live ── */
+  window.addEventListener('message', e => {
+    if (e.origin !== 'https://da.live') return;
+    if (e.data?.details?.org)  document.getElementById('orgInput').value  = e.data.details.org;
+    if (e.data?.details?.site) document.getElementById('siteInput').value = e.data.details.site;
+  });
+</script>
+</body>
+</html>

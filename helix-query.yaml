@@ -30,6 +30,3 @@ indices:
       version:
         select: div > div > div:has(#version) > div:last-child
         value: textContent(el)
-      pricingTiers:
-        select: div > div > div:has(#pricingTiers) > div:last-child
-        value: innerHTML(el)

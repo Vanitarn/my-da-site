@@ -15,16 +15,20 @@ export default function decorate(block) {
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
 
-    // Read card style from the third div (index 2)
-    const styleDiv = row.children[2];
+    // Read eyebrow from the third div (index 2) — optional field
+    const eyebrowDiv = row.children[2];
+    const eyebrowText = eyebrowDiv?.querySelector('p')?.textContent?.trim() || '';
+
+    // Read card style from the fourth div (index 3)
+    const styleDiv = row.children[3];
     const styleParagraph = styleDiv?.querySelector('p');
     const cardStyle = styleParagraph?.textContent?.trim() || 'default';
     if (cardStyle && cardStyle !== 'default') {
       li.className = cardStyle;
     }
 
-    // Read CTA style from the fourth div (index 3)
-    const ctaDiv = row.children[3];
+    // Read CTA style from the fifth div (index 4)
+    const ctaDiv = row.children[4];
     const ctaParagraph = ctaDiv?.querySelector('p');
     const ctaStyle = ctaParagraph?.textContent?.trim() || 'default';
 
@@ -39,12 +43,16 @@ export default function decorate(block) {
       } else if (index === 1) {
         div.className = 'cards-card-body';
       } else if (index === 2) {
+        // Eyebrow field — hide the source div (value already read above)
+        div.className = 'cards-config';
+        div.style.display = 'none';
+      } else if (index === 3) {
         div.className = 'cards-config';
         const p = div.querySelector('p');
         if (p) {
           p.style.display = 'none';
         }
-      } else if (index === 3) {
+      } else if (index === 4) {
         div.className = 'cards-config';
         const p = div.querySelector('p');
         if (p) {
@@ -54,6 +62,17 @@ export default function decorate(block) {
         div.className = 'cards-card-body';
       }
     });
+
+    // Inject eyebrow element into card body if authored
+    if (eyebrowText) {
+      const cardBody = li.querySelector('.cards-card-body');
+      if (cardBody) {
+        const eyebrow = document.createElement('p');
+        eyebrow.className = 'cards-card-eyebrow';
+        eyebrow.textContent = eyebrowText;
+        cardBody.insertBefore(eyebrow, cardBody.firstChild);
+      }
+    }
 
     // Apply CTA styles to button containers
     const buttonContainers = li.querySelectorAll('p.button-container');

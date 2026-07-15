@@ -73,6 +73,16 @@
   font-weight: 500;
 }
 
+.cards .cards-card-eyebrow {
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--link-color, #008edd);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
 .cards .cards-card-image {
   line-height: 0;
   background-color: transparent;

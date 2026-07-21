@@ -99,7 +99,7 @@
           "plugins": {
             "da": {
               "rows": 1,
-              "columns": 3,
+              "columns": 4,
               "fields": [
                 {
                   "name": "image",
@@ -114,8 +114,12 @@
                   "selector": "div:nth-child(2)"
                 },
                 {
-                  "name": "variant",
+                  "name": "eyebrow",
                   "selector": "div:nth-child(3)>:first-child"
+                },
+                {
+                  "name": "variant",
+                  "selector": "div:nth-child(4)>:first-child"
                 }
               ]
             }

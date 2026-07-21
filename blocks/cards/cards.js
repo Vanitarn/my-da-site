@@ -15,49 +15,39 @@ export default function decorate(block) {
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
 
-    // Read eyebrow from the third div (index 2) — optional field
-    const eyebrowDiv = row.children[2];
-    const eyebrowText = eyebrowDiv?.querySelector('p')?.textContent?.trim() || '';
+    // Column structure (must be authored in this order):
+    // 1: Image | 2: Body | 3: Eyebrow | 4: Card style | 5: CTA style
+    // If column 3 (eyebrow) is omitted, columns 4 and 5 will be misread and the card will break.
 
-    // Read card style from the fourth div (index 3)
-    const styleDiv = row.children[3];
-    const styleParagraph = styleDiv?.querySelector('p');
-    const cardStyle = styleParagraph?.textContent?.trim() || 'default';
+    // Read eyebrow from column 3 (index 2)
+    const eyebrowText = row.children[2]?.querySelector('p')?.textContent?.trim() || '';
+
+    // Read card style from column 4 (index 3)
+    const cardStyle = row.children[3]?.querySelector('p')?.textContent?.trim() || 'default';
     if (cardStyle && cardStyle !== 'default') {
       li.className = cardStyle;
     }
 
-    // Read CTA style from the fifth div (index 4)
-    const ctaDiv = row.children[4];
-    const ctaParagraph = ctaDiv?.querySelector('p');
-    const ctaStyle = ctaParagraph?.textContent?.trim() || 'default';
+    // Read CTA style from column 5 (index 4)
+    const ctaStyle = row.children[4]?.querySelector('p')?.textContent?.trim() || 'default';
 
     moveInstrumentation(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
 
     // Process the li children to identify and style them correctly
     [...li.children].forEach((div, index) => {
-      // First div (index 0) - Image
       if (index === 0) {
         div.className = 'cards-card-image';
       } else if (index === 1) {
         div.className = 'cards-card-body';
       } else if (index === 2) {
-        // Eyebrow field — hide the source div (value already read above)
+        // Eyebrow source div — hide it (value already read above)
         div.className = 'cards-config';
         div.style.display = 'none';
-      } else if (index === 3) {
+      } else if (index === 3 || index === 4) {
         div.className = 'cards-config';
         const p = div.querySelector('p');
-        if (p) {
-          p.style.display = 'none';
-        }
-      } else if (index === 4) {
-        div.className = 'cards-config';
-        const p = div.querySelector('p');
-        if (p) {
-          p.style.display = 'none';
-        }
+        if (p) p.style.display = 'none';
       } else {
         div.className = 'cards-card-body';
       }

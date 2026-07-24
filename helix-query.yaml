@@ -25,7 +25,7 @@ indices:
         select: div:has(h3#status) + div
         value: textContent(el)
       thumbnailUrl:
-        select: div:has(h3#thumbnailUrl) + div
+        select: div:has(h3#thumbnailurl) + div
         value: textContent(el)
       version:
         select: div:has(h3#version) + div

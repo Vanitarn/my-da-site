@@ -1,0 +1,32 @@
+version: 1
+indices:
+  products:
+    target: /products-index.json
+    include:
+      - /products/**
+    exclude:
+      - "**/fragments/**"
+      - "**/drafts/**"
+      - "**/*.json"
+    properties:
+      name:
+        select: div > div > div:has(#name) > div:last-child
+        value: textContent(el)
+      slug:
+        select: div > div > div:has(#slug) > div:last-child
+        value: textContent(el)
+      tagline:
+        select: div > div > div:has(#tagline) > div:last-child
+        value: textContent(el)
+      category:
+        select: div > div > div:has(#category) > div:last-child
+        value: textContent(el)
+      status:
+        select: div > div > div:has(#status) > div:last-child
+        value: textContent(el)
+      thumbnailUrl:
+        select: div > div > div:has(#thumbnailUrl) > div:last-child
+        value: textContent(el)
+      version:
+        select: div > div > div:has(#version) > div:last-child
+        value: textContent(el)

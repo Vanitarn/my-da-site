@@ -10,23 +10,23 @@ indices:
       - "**/*.json"
     properties:
       name:
-        select: div > div > div:has(#name) > div:last-child
+        select: div:has(h3#name) + div
         value: textContent(el)
       slug:
-        select: div > div > div:has(#slug) > div:last-child
+        select: div:has(h3#slug) + div
         value: textContent(el)
       tagline:
-        select: div > div > div:has(#tagline) > div:last-child
+        select: div:has(h3#tagline) + div
         value: textContent(el)
       category:
-        select: div > div > div:has(#category) > div:last-child
+        select: div:has(h3#category) + div
         value: textContent(el)
       status:
-        select: div > div > div:has(#status) > div:last-child
+        select: div:has(h3#status) + div
         value: textContent(el)
       thumbnailUrl:
-        select: div > div > div:has(#thumbnailUrl) > div:last-child
+        select: div:has(h3#thumbnailUrl) + div
         value: textContent(el)
       version:
-        select: div > div > div:has(#version) > div:last-child
+        select: div:has(h3#version) + div
         value: textContent(el)
